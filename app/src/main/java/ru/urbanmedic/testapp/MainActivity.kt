@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
 
         val seedDao = UrbanMedicDB.getDatabase(this).seedDao()
         lifecycleScope.launch {
-            if (seedDao.loggedIn() != null) {
+            if (seedDao.loggedIn() == null) {
                 val intent = Intent(
                     this@MainActivity,
                     LoginActivity::class.java
