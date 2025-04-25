@@ -20,7 +20,7 @@ interface SeedDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun login( seed: Seed)
 
-    @Query("SELECT * FROM seed")
+    @Query("SELECT * FROM seed LIMIT 1")
     suspend fun loggedIn(): Seed?
 
     @Query("DELETE FROM seed")
