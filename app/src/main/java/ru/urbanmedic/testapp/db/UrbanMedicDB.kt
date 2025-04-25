@@ -22,6 +22,8 @@ import ru.urbanmedic.testapp.model.Seed
 )
 abstract class UrbanMedicDB : RoomDatabase() {
 
+    abstract fun seedDao(): SeedDao
+
     companion object {
         private var INSTANCE: UrbanMedicDB? = null
         private const val DB_NAME = "urban_medic.db"

@@ -1,20 +1,29 @@
 package ru.urbanmedic.testapp
 
+import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
+import android.view.Menu
+import android.view.MenuItem
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
+import kotlinx.coroutines.launch
 import ru.urbanmedic.testapp.databinding.ActivityMainBinding
+import ru.urbanmedic.testapp.db.UrbanMedicDB
+
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+
+    private var launcher: ActivityResultLauncher<Intent>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,11 +37,37 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-        binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null)
-                .setAnchorView(R.id.fab).show()
+        launcher = registerForActivityResult<Intent, ActivityResult>(
+            StartActivityForResult()
+        ) { result: ActivityResult ->
+            if (result.resultCode == RESULT_OK) {
+                val data = result.data
+                //todo login result processing
+            }
         }
+    }
+
+    override fun onResume(){
+        super.onResume()
+
+        val seedDao = UrbanMedicDB.getDatabase(this).seedDao()
+        lifecycleScope.launch {
+            if (seedDao.loggedIn() != null) {
+                val intent = Intent(
+                    this@MainActivity,
+                    LoginActivity::class.java
+                )
+
+                launcher?.launch(intent)
+            } else {
+                loadUsers()
+            }
+
+        }
+    }
+
+    private fun loadUsers(){
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
