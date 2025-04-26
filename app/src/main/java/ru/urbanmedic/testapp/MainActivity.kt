@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadUsers(){
-
+        
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
