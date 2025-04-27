@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "387e4be4d3584b1acc41f2b19667c49c",
+    "identityHash": "a37329646c1a4c574d4980b3862d5821",
     "entities": [
       {
         "tableName": "seed",
@@ -36,11 +36,39 @@
             "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_seed_id` ON `${TABLE_NAME}` (`id`)"
           }
         ]
+      },
+      {
+        "tableName": "user",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_user_id",
+            "unique": true,
+            "columnNames": [
+              "id"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_user_id` ON `${TABLE_NAME}` (`id`)"
+          }
+        ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '387e4be4d3584b1acc41f2b19667c49c')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a37329646c1a4c574d4980b3862d5821')"
     ]
   }
 }

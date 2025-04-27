@@ -15,14 +15,17 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import ru.urbanmedic.testapp.model.Seed
+import ru.urbanmedic.testapp.model.User
 
 @Database(
     version = 1,
-    entities = [Seed::class]
+    entities = [Seed::class, User::class]
 )
 abstract class UrbanMedicDB : RoomDatabase() {
 
     abstract fun seedDao(): SeedDao
+
+    abstract fun userDao(): UserDao
 
     companion object {
         private var INSTANCE: UrbanMedicDB? = null
