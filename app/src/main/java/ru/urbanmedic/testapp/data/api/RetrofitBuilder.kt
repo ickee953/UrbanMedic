@@ -16,6 +16,8 @@ object RetrofitBuilder {
 
     const val URL = ""
     const val ALL_USERS_PATH = ""
+    const val GEO_URL = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/geolocate/address"
+    const val GEO_AUTH_TOKEN = "0fc7d60da65943f6aa3ba2f4a289b50bc024d18f"
 
     private fun buildRetrofit(): Retrofit {
         return Retrofit.Builder()
@@ -25,5 +27,14 @@ object RetrofitBuilder {
             .build()
     }
 
+    private fun buildGeoRetrofit(): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl("$GEO_URL/")
+            .client(OkHttpClient.Builder().build())
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
     val apiService: ApiService = buildRetrofit().create(ApiService::class.java)
+    val geoService: GeoService = buildGeoRetrofit().create(GeoService::class.java)
 }
