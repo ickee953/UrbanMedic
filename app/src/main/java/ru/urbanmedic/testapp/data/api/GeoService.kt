@@ -10,19 +10,21 @@ package ru.urbanmedic.testapp.data.api
 
 import retrofit2.Response
 import retrofit2.http.Body
-import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.POST
-import retrofit2.http.Url
 import ru.urbanmedic.testapp.vo.GeoVO
+import ru.urbanmedic.testapp.vo.SuggestionsListVO
 
 interface GeoService {
 
-    @Headers("Content-type: application/json", "Content-Encoding: UTF-8")
-    @POST()
+    @Headers(
+        "Content-Type: application/json",
+        "Accept: application/json",
+        "Content-Encoding: UTF-8",
+        "Authorization: Token 0fc7d60da65943f6aa3ba2f4a289b50bc024d18f"
+    )
+    @POST(RetrofitBuilder.GEO_PATH)
     suspend fun getCity(
-        @Url url: String,
-        @Header("Authorization") token: String,
         @Body geo: GeoVO
-    ) : Response<String?>
+    ) : Response<SuggestionsListVO>
 }

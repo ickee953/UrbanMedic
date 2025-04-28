@@ -36,53 +36,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
-    //private var locationManager: LocationManager? = null
-
-    private val locationPermissionRequest = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        when {
-            permissions.getOrDefault(ACCESS_FINE_LOCATION, false) -> {
-                getCurrentLocation()
-            }
-            permissions.getOrDefault(ACCESS_COARSE_LOCATION, false) -> {
-                getCurrentLocation()
-            } else -> {
-                val builder = AlertDialog.Builder(this@MainActivity)
-                builder.setMessage("No location access granted")
-                builder.setPositiveButton(R.string.yes){ _, _ ->
-                    this@MainActivity.finish()
-                }
-                builder.show()
-            }
-        }
-    }
-
-    private fun getCurrentLocation() {
-        val locationManager
-                = this@MainActivity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
-        val locationListener = LocationListener {
-            //todo request city by location
-            GeoVO(it.latitude, it.longitude)
-        }
-
-        if( ActivityCompat.checkSelfPermission(this@MainActivity, ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(this@MainActivity, ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            locationPermissionRequest.launch(arrayOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION))
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setSupportActionBar(binding.toolbar)
+        //setSupportActionBar(binding.toolbar)
 
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)

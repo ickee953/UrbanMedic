@@ -6,12 +6,12 @@
  * Written by Panov Vitaly 27 April 2025
  */
 
-package ru.urbanmedic.testapp.repository
+package ru.urbanmedic.testapp.data.api
 
-import ru.urbanmedic.testapp.data.api.ApiHelper
+import ru.urbanmedic.testapp.vo.GeoVO
 
-class UserRepository(private val apiHelper: ApiHelper) {
+class GeoHelper (private val geoService:GeoService) {
 
-    suspend fun allUsers(url: String) = apiHelper.allUsers( url )
+    suspend fun getCity(geo: GeoVO) = geoService.getCity(geo)
 
 }

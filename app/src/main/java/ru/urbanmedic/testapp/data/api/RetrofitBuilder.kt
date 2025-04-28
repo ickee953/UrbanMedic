@@ -14,9 +14,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitBuilder {
 
-    const val URL = ""
-    const val ALL_USERS_PATH = ""
-    const val GEO_URL = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/geolocate/address"
+    const val URL = "https://randomuser.me"
+    const val ALL_USERS_PATH = "users"
+    const val GEO_BASE_URL = "https://suggestions.dadata.ru"
+    const val GEO_PATH = "/suggestions/api/4_1/rs/geolocate/address"
     const val GEO_AUTH_TOKEN = "0fc7d60da65943f6aa3ba2f4a289b50bc024d18f"
 
     private fun buildRetrofit(): Retrofit {
@@ -29,7 +30,7 @@ object RetrofitBuilder {
 
     private fun buildGeoRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("$GEO_URL/")
+            .baseUrl("$GEO_BASE_URL/")
             .client(OkHttpClient.Builder().build())
             .addConverterFactory(GsonConverterFactory.create())
             .build()

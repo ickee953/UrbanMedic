@@ -13,6 +13,7 @@ navigationUiKtx = "2.8.9"
 swiperefreshlayout = "1.1.0"
 roomRuntime = "2.7.1"
 roomKtx = "2.7.1"
+gson = "2.10.1"
 retrofit = "2.11.0"
 converterGson = "2.11.0"
 okhttp = "5.0.0-alpha.14"
@@ -33,6 +34,7 @@ androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "s
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomRuntime" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomVersion" }
+com-google-code-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 com-squareup-retrofit2 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 com-squareup-retrofit2-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "converterGson" }
 com-squareup-okhttp3 = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }

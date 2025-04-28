@@ -59,6 +59,8 @@ dependencies {
     annotationProcessor(libs.androidx.room.compiler)
     ksp(libs.androidx.room.compiler)
 
+    implementation(libs.com.google.code.gson)
+
     implementation(libs.com.squareup.retrofit2)
     implementation(libs.com.squareup.retrofit2.converter.gson)
     implementation(libs.com.squareup.okhttp3)
