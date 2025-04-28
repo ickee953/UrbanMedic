@@ -10,6 +10,7 @@ package ru.urbanmedic.testapp
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -28,6 +29,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
+import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity.RESULT_OK
 import androidx.core.app.ActivityCompat
@@ -56,6 +58,20 @@ class UsersFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    private lateinit var locationManager: LocationManager
+
+    private val locationListener = object : LocationListener {
+        override fun onLocationChanged(location: Location) {
+            loadCityByGeo(location.latitude, location.longitude)
+        }
+
+        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
+
+        override fun onProviderEnabled(provider: String) {}
+
+        override fun onProviderDisabled(provider: String) {}
+    }
+
     private lateinit var seedDao: SeedDao
 
     private var launcher: ActivityResultLauncher<Intent>? = null
@@ -70,43 +86,28 @@ class UsersFragment : Fragment() {
     ) { permissions ->
         when {
             permissions.getOrDefault(ACCESS_FINE_LOCATION, false) -> {
-                getCurrentLocation()
+                requestCurrentLocation()
             }
             permissions.getOrDefault(ACCESS_COARSE_LOCATION, false) -> {
-                getCurrentLocation()
+                requestCurrentLocation()
             } else -> {
-            val builder = AlertDialog.Builder(requireActivity())
-            builder.setMessage("No location access granted")
-            builder.setPositiveButton(R.string.yes){ _, _ ->
-                requireActivity().finish()
+                val builder = AlertDialog.Builder(requireActivity())
+                builder.setMessage("No location access granted")
+                builder.setPositiveButton(R.string.yes){ _, _ ->
+
+                }
+                builder.show()
             }
-            builder.show()
-        }
         }
     }
 
-    private fun getCurrentLocation() {
-        val locationManager
-                = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
-        val locationListener = object : LocationListener {
-            override fun onLocationChanged(location: Location) {
-                loadCityByGeo(location.latitude, location.longitude)
-            }
-
-            override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
-
-            override fun onProviderEnabled(provider: String) {}
-
-            override fun onProviderDisabled(provider: String) {}
-        }
-
+    private fun requestCurrentLocation() {
         if( ActivityCompat.checkSelfPermission(requireActivity(), ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
             && ActivityCompat.checkSelfPermission(requireActivity(), ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            locationPermissionRequest.launch(arrayOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION))
+            return
         } else {
             locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, locationListener, null)
         }
@@ -115,15 +116,28 @@ class UsersFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        locationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        if( ActivityCompat.checkSelfPermission(requireActivity(), ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(requireActivity(), ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            locationPermissionRequest.launch(arrayOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION))
+        } else {
+            requestCurrentLocation()
+        }
+
         seedDao = UrbanMedicDB.getDatabase(requireActivity()).seedDao()
 
         launcher = registerForActivityResult<Intent, ActivityResult>(
             StartActivityForResult()
         ) { result: ActivityResult ->
             if (result.resultCode == RESULT_OK) {
-                val data = result.data
-                init()
+                //val data = result.data
+                //init()
             }
+
         }
     }
 
@@ -147,7 +161,7 @@ class UsersFragment : Fragment() {
 
         binding.retryBtn.setOnClickListener {
             reloadUsers(seed!!.value!!)
-            getCurrentLocation()
+            requestCurrentLocation()
         }
         /*binding.addUserBtn.setOnClickListener {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
@@ -174,11 +188,10 @@ class UsersFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(item.itemId == R.id.action_exit) {
-            //todo app exit
-            return true
+        return when (item.itemId) {
+            R.id.action_exit -> true
+            else -> super.onOptionsItemSelected(item)
         }
-        return false
     }
 
     private fun init() {
@@ -196,7 +209,6 @@ class UsersFragment : Fragment() {
                 launcher?.launch(intent)
             } else {
                 reloadUsers(seed!!.value!!)
-                getCurrentLocation()
             }
 
         }
@@ -247,7 +259,6 @@ class UsersFragment : Fragment() {
 
             try {
                 val response = geoRepository.getCity(GeoVO(lat, lon))
-                //val response = geoRepository.getCity(GeoVO())
 
                 if( response.code() == 200 ){
                     val suggestionsList = response.body()!!.suggestionsVO
