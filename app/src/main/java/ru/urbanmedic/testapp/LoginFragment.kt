@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
@@ -40,20 +41,28 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.seed.addTextChangedListener {
+            binding.seed.error = null
+        }
+
         binding.loginBtn.setOnClickListener {
 
-            val seedDao: SeedDao = UrbanMedicDB.getDatabase(requireActivity().application).seedDao()
+            if(binding.seed.text!!.isBlank()){
+                binding.seed.error = resources.getString(R.string.err_not_empty)
+            } else {
+                val seedDao: SeedDao = UrbanMedicDB.getDatabase(requireActivity().application).seedDao()
 
-            lifecycleScope.launch {
+                lifecycleScope.launch {
 
-                seedDao.logout()
-                seedDao.login(
-                    Seed(binding.seed.text.toString())
-                )
+                    seedDao.logout()
+                    seedDao.login(
+                        Seed(binding.seed.text.toString())
+                    )
 
-                requireActivity().setResult(Activity.RESULT_OK)
-                requireActivity().finish()
+                    requireActivity().setResult(Activity.RESULT_OK)
+                    requireActivity().finish()
 
+                }
             }
         }
     }

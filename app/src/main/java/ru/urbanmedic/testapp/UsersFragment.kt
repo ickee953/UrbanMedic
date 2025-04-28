@@ -116,6 +116,8 @@ class UsersFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        setHasOptionsMenu(true)
+
         locationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         if( ActivityCompat.checkSelfPermission(requireActivity(), ACCESS_FINE_LOCATION
@@ -184,12 +186,38 @@ class UsersFragment : Fragment() {
 
         val exitItem         : MenuItem? = menu.findItem(R.id.action_exit)
 
+        exitItem?.isVisible = true
+
         super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_exit -> true
+            R.id.action_exit -> {
+                val builder = activity?.let { AlertDialog.Builder(it) }
+
+                builder?.setTitle(resources.getString(R.string.attention))
+                builder?.setMessage(resources.getString(R.string.are_you_sure))
+
+                builder?.setPositiveButton(R.string.dialog_btn_yes) { _, _ ->
+
+                    lifecycleScope.launch {
+                        if(seedDao.loggedIn() != null) {
+                            seedDao.logout()
+                            init()
+                        }
+                    }
+
+                }
+
+                builder?.setNegativeButton(R.string.dialog_btn_no) { _, _ ->
+
+                }
+
+                builder?.show()
+
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -216,8 +244,7 @@ class UsersFragment : Fragment() {
 
     private fun reloadUsers(seed: String) {
         users.clear()
-        binding.syncErrorView.visibility = View.GONE
-
+        
         lifecycleScope.launch {
 
             binding.pullToRefresh.isRefreshing = true
@@ -231,15 +258,25 @@ class UsersFragment : Fragment() {
                 )
 
                 if( response.code() == 200 ){
+                    binding.syncErrorView.visibility = View.GONE
+
                     val usersResponse = response.body()
                     usersResponse!!.results.forEach{
                         users.add(
                             UserItem(it.email, it.userName?.lastName)
                         )
                     }
-                } else {
-                    binding.pullToRefresh.isRefreshing = false
+                } else if( response.code() == 502 ) {
+                    val builder = AlertDialog.Builder(requireActivity())
+                    builder.setTitle("Bad Gateway")
+                    builder.setMessage("HTTP 502 - Unable to Connect to the Origin Server: ${RetrofitBuilder.USER_BASE_URL}")
+                    builder.setPositiveButton(R.string.yes){ _, _ ->
 
+                    }
+                    builder.show()
+
+                    binding.syncErrorView.visibility = View.VISIBLE
+                } else {
                     binding.syncErrorView.visibility = View.VISIBLE
                 }
             } catch (exception : Exception){

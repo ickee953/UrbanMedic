@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
     android:layout_width="wrap_content"
     android:layout_height="match_parent">
 
@@ -15,12 +16,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:src="@drawable/ic_launcher_background"
+            android:src="@drawable/login_title"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/textInputLayout"/>
+            app:layout_constraintBottom_toTopOf="@+id/enterSeedTextView"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/enterSeedTextView"
+            style="@style/BrandTextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/textInputLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appCompatImageView"
+            android:textColor="@color/text_primary"
+            android:textAlignment="center"
+            android:text="@string/seed"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout"
@@ -30,7 +44,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appCompatImageView">
+            app:layout_constraintTop_toBottomOf="@+id/enterSeedTextView">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/seed"
@@ -47,12 +61,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:theme="@style/BrandButtonTheme"
             android:id="@+id/login_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Button" />
+            android:text="@string/sign_in" />
 
     </androidx.cardview.widget.CardView>
 
