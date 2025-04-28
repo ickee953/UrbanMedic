@@ -62,4 +62,6 @@
     <string name="edit">Edit</string>
     <string name="save">Save</string>
     <string name="yes">OK</string>
+    <string name="sync_error">Sync error!</string>
+    <string name="retry">Retry</string>
 </resources>

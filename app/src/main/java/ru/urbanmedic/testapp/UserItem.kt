@@ -9,6 +9,6 @@
 package ru.urbanmedic.testapp
 
 data class UserItem(
-    var id: Long?,
-    var username: String?
+    var email: String?,
+    var lastname: String?
 )

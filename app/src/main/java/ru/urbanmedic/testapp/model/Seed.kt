@@ -19,7 +19,7 @@ import androidx.room.PrimaryKey
 )
 class Seed (
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") var id: Long?,
-    @ColumnInfo(name = "seed") var seed: String?
+    @ColumnInfo(name = "seed") var value: String?
 ) {
-    constructor(seed: String) : this(null, seed)
+    constructor(value: String) : this(null, value)
 }

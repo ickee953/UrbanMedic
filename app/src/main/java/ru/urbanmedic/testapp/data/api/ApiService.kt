@@ -16,10 +16,11 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Url
 import ru.urbanmedic.testapp.vo.UserVO
+import ru.urbanmedic.testapp.vo.UsersResultListVO
 
 interface ApiService {
 
     @GET()
-    suspend fun allUsers(@Url url: String) : Response<Any?>
+    suspend fun allUsers(@Url url: String) : Response<UsersResultListVO>
 
 }

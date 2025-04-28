@@ -11,6 +11,6 @@ package ru.urbanmedic.testapp.vo
 import com.google.gson.annotations.SerializedName
 
 data class UserVO (
-    @SerializedName("id") var id: Long?,
-    @SerializedName("username") var username: String?
+    @SerializedName("email") var email: String?,
+    @SerializedName("name") var userName: UserNameVO?
 )

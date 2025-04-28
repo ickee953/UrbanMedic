@@ -36,6 +36,7 @@ import ru.urbanmedic.testapp.data.api.RetrofitBuilder
 import ru.urbanmedic.testapp.databinding.FragmentUsersBinding
 import ru.urbanmedic.testapp.db.SeedDao
 import ru.urbanmedic.testapp.db.UrbanMedicDB
+import ru.urbanmedic.testapp.model.Seed
 import ru.urbanmedic.testapp.repository.GeoRepository
 import ru.urbanmedic.testapp.repository.UserRepository
 import ru.urbanmedic.testapp.vo.GeoVO
@@ -57,6 +58,9 @@ class UsersFragment : Fragment() {
     private var launcher: ActivityResultLauncher<Intent>? = null
 
     private var users: MutableList<UserItem> = LinkedList()
+
+    private var currentPage: Int = 0
+    private var seed: Seed? = null
 
     private val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -138,6 +142,10 @@ class UsersFragment : Fragment() {
 
         binding.toolbar.isTitleCentered = true
 
+        binding.retryBtn.setOnClickListener {
+            reloadUsers(seed!!.value!!)
+            getCurrentLocation()
+        }
         /*binding.addUserBtn.setOnClickListener {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
         }*/
@@ -159,7 +167,7 @@ class UsersFragment : Fragment() {
         (activity as MainActivity).supportActionBar?.title = ""
 
         lifecycleScope.launch {
-            val seed = seedDao.loggedIn()
+            seed = seedDao.loggedIn()
             if (seed == null) {
                 val intent = Intent(
                     requireActivity(),
@@ -168,7 +176,7 @@ class UsersFragment : Fragment() {
 
                 launcher?.launch(intent)
             } else {
-                reloadUsers(seed.seed!!)
+                reloadUsers(seed!!.value!!)
                 getCurrentLocation()
             }
 
@@ -177,6 +185,7 @@ class UsersFragment : Fragment() {
 
     private fun reloadUsers(seed: String) {
         users.clear()
+        binding.syncErrorView.visibility = View.GONE
 
         lifecycleScope.launch {
 
@@ -186,25 +195,25 @@ class UsersFragment : Fragment() {
 
             try {
                 val response = userRepository.allUsers(
-                    "${RetrofitBuilder.URL}/${RetrofitBuilder.ALL_USERS_PATH}?seed=${seed}"
+                    "${RetrofitBuilder.USER_BASE_URL}/${RetrofitBuilder.USER_API_PATH}" +
+                            "?page=${currentPage}&results=${RetrofitBuilder.USER_API_RESULTS}seed=${seed}"
                 )
 
                 if( response.code() == 200 ){
                     val usersResponse = response.body()
-                    /*usersResponse?.let { resp->
-                        resp.forEach {
-                            users.add(
-                                UserItem(it.id, it.username)
-                            )
-                        }
-                    }*/
-                } else if( response.code() == 204 ){
-                    binding.pullToRefresh.isRefreshing = false
+                    usersResponse!!.results.forEach{
+                        users.add(
+                            UserItem(it.email, it.userName?.lastName)
+                        )
+                    }
                 } else {
                     binding.pullToRefresh.isRefreshing = false
+
+                    binding.syncErrorView.visibility = View.VISIBLE
                 }
             } catch (exception : Exception){
                 exception.printStackTrace()
+                binding.syncErrorView.visibility = View.VISIBLE
             } finally {
                 binding.pullToRefresh.isRefreshing = false
             }

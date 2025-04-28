@@ -10,6 +10,7 @@ package ru.urbanmedic.testapp.vo
 
 import com.google.gson.annotations.SerializedName
 
-data class SuggestionDataVO(
-    @SerializedName("city") var city: String?
+data class UserNameVO(
+    @SerializedName("first") var firstName: String?,
+    @SerializedName("last") var lastName: String?
 )
