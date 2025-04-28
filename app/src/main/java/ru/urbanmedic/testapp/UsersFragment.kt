@@ -19,6 +19,9 @@ import android.location.LocationManager
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
@@ -160,6 +163,22 @@ class UsersFragment : Fragment() {
         super.onResume()
 
         init()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_main, menu)
+
+        val exitItem         : MenuItem? = menu.findItem(R.id.action_exit)
+
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item.itemId == R.id.action_exit) {
+            //todo app exit
+            return true
+        }
+        return false
     }
 
     private fun init() {
