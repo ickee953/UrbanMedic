@@ -3,6 +3,9 @@
     <style name="Base.Theme.TestApp" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <item name="colorPrimary">@color/brand</item>
+        <!--<item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorOnPrimary">@color/brand</item>-->
+        <item name="colorError">@color/warning</item>
         <item name="android:colorBackground">@color/white</item>
         <item name="colorAccent">@color/brand</item>
         <item name="buttonStyle">@style/BrandButtonTheme</item>
@@ -10,9 +13,14 @@
         <item name="editTextStyle">@style/BrandEditTextTheme</item>
         <item name="android:navigationBarColor">@color/white</item>
         <item name="android:windowLightNavigationBar">true</item>
+        <!--<item name="actionBarTheme">@style/CustomActionBarTheme</item>-->
     </style>
 
     <style name="Theme.TestApp" parent="Base.Theme.TestApp" />
+
+    <style name="CustomToolBarTheme" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="android:background">@color/white</item>
+    </style>
 
     <style name="BrandButtonTheme" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">@color/brand</item>
@@ -28,22 +36,33 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:fontFamily">Roboto</item>
         <item name="android:fontWeight">500</item>
-        <item name="android:lineHeight">20sp</item>
+        <!--<item name="android:lineHeight">20sp</item>-->
         <item name="android:spacing">0.18sp</item>
         <!--<item name="android:textAppearance">?android:attr/textAppearanceMedium</item>-->
-
     </style>
 
-    <style name="BrandTextInputLayoutTheme" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+    <style name="SecondButtonTheme" parent="BrandButtonTheme">
+        <item name="backgroundTint">@color/light_gray</item>
+        <item name="android:textColor">@color/dark_gray</item>
+    </style>
+
+    <style name="BrandTextInputLayoutTheme" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
         <item name="boxStrokeColor">@color/dark_gray</item>
+        <item name="boxStrokeErrorColor">@color/warning</item>
+        <!--<item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>-->
+        <item name="helperTextEnabled">false</item>
         <item name="hintTextColor">@color/dark_gray</item>
+        <item name="expandedHintEnabled">false</item>
         <item name="boxBackgroundColor">@color/white</item>
         <item name="android:textColor">@color/text_primary</item>
-        <item name="endIconTint">@color/white</item>
-        <item name="endIconMode">none</item>
+        <!--<item name="endIconTint">@color/white</item>
+        <item name="endIconMode">none</item>-->
+        <item name="endIconCheckable">false</item>
         <item name="errorIconTint">@null</item>
         <item name="errorIconDrawable">@null</item>
         <item name="errorTextColor">@color/warning</item>
+        <item name="errorEnabled">false</item>
         <item name="android:colorError">@color/text_primary</item>
     </style>
 
@@ -57,7 +76,7 @@
 
     <style name="BrandTextViewStyle" parent="Widget.MaterialComponents.TextView">
         <item name="android:textColor">@color/text_primary</item>
-        <item name="android:textSize">48sp</item>
+        <item name="android:textSize">28sp</item>
         <item name="android:fontFamily">Roboto</item>
         <!--<item name="android:textAppearance">?android:attr/textAppearanceMedium</item>-->
     </style>

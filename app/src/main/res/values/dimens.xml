@@ -1,4 +1,9 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="status_bar_height">25dp</dimen>
+    <dimen name="margin_min">8dp</dimen>
+    <dimen name="margin_min_1">16dp</dimen>
+    <dimen name="margin">24dp</dimen>
+    <dimen name="margin_middle">48dp</dimen>
+    <dimen name="text_input_layout_width">318dp</dimen>
 </resources>

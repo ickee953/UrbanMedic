@@ -45,7 +45,8 @@
     </string>
 
     <string name="sign_in">Sign in</string>
-    <string name="seed">Enter Seed</string>
+    <string name="seed">Seed</string>
+    <string name="enter_seed">Enter Seed</string>
     <string name="last_name">Last name</string>
     <string name="email">Email</string>
     <string name="add_contact">Add contact</string>
