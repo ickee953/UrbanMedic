@@ -135,9 +135,8 @@ class UsersFragment : Fragment() {
         launcher = registerForActivityResult<Intent, ActivityResult>(
             StartActivityForResult()
         ) { result: ActivityResult ->
-            if (result.resultCode == RESULT_OK) {
-                //val data = result.data
-                //init()
+            if (result.resultCode != RESULT_OK) {
+                requireActivity().finish()
             }
 
         }

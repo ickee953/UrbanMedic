@@ -47,9 +47,8 @@ class LoginFragment : Fragment() {
 
         binding.loginBtn.setOnClickListener {
 
-            if(binding.seed.text!!.isBlank()){
-                binding.seed.error = resources.getString(R.string.err_not_empty)
-            } else {
+            if(binding.seed.text!!.isNotBlank()){
+
                 val seedDao: SeedDao = UrbanMedicDB.getDatabase(requireActivity().application).seedDao()
 
                 lifecycleScope.launch {

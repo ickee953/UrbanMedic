@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
                 || super.onSupportNavigateUp()
     }
 
-    override fun onBackPressed() {
+    /*override fun onBackPressed() {
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment
@@ -68,5 +68,5 @@ class MainActivity : AppCompatActivity() {
         } else {
             finish()
         }
-    }
+    }*/
 }
