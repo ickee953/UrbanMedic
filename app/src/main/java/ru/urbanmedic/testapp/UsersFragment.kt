@@ -136,10 +136,13 @@ class UsersFragment : Fragment() {
             StartActivityForResult()
         ) { result: ActivityResult ->
             if (result.resultCode != RESULT_OK) {
-                requireActivity().finish()
+                activity?.finish()
+            } else {
+                init()
             }
-
         }
+
+        init()
     }
 
     override fun onCreateView(
@@ -160,10 +163,6 @@ class UsersFragment : Fragment() {
 
         binding.toolbar.isTitleCentered = true
 
-        binding.retryBtn.setOnClickListener {
-            reloadUsers(seed!!.value!!)
-            requestCurrentLocation()
-        }
         /*binding.addUserBtn.setOnClickListener {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
         }*/
@@ -174,10 +173,8 @@ class UsersFragment : Fragment() {
         _binding = null
     }
 
-    override fun onResume(){
-        super.onResume()
-
-        init()
+    override fun onStart() {
+        super.onStart()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -197,7 +194,6 @@ class UsersFragment : Fragment() {
 
                 builder?.setTitle(resources.getString(R.string.attention))
                 builder?.setMessage(resources.getString(R.string.are_you_sure))
-
                 builder?.setPositiveButton(R.string.dialog_btn_yes) { _, _ ->
 
                     lifecycleScope.launch {
@@ -208,11 +204,8 @@ class UsersFragment : Fragment() {
                     }
 
                 }
-
                 builder?.setNegativeButton(R.string.dialog_btn_no) { _, _ ->
-
                 }
-
                 builder?.show()
 
                 true
@@ -229,7 +222,7 @@ class UsersFragment : Fragment() {
             seed = seedDao.loggedIn()
             if (seed == null) {
                 val intent = Intent(
-                    requireActivity(),
+                    activity,
                     LoginActivity::class.java
                 )
 
@@ -257,7 +250,6 @@ class UsersFragment : Fragment() {
                 )
 
                 if( response.code() == 200 ){
-                    binding.syncErrorView.visibility = View.GONE
 
                     val usersResponse = response.body()
                     usersResponse!!.results.forEach{
@@ -266,21 +258,23 @@ class UsersFragment : Fragment() {
                         )
                     }
                 } else if( response.code() == 502 ) {
-                    val builder = AlertDialog.Builder(requireActivity())
-                    builder.setTitle("Bad Gateway")
-                    builder.setMessage("HTTP 502 - Unable to Connect to the Origin Server: ${RetrofitBuilder.USER_BASE_URL}")
-                    builder.setPositiveButton(R.string.yes){ _, _ ->
+                    val builder = activity?.let { AlertDialog.Builder(it) }
+                    builder?.setTitle("Bad Gateway")
+                    builder?.setMessage("HTTP 502 - Unable to Connect to the Origin Server: ${RetrofitBuilder.USER_BASE_URL}")
+                    builder?.setPositiveButton(R.string.yes){ _, _ ->
 
                     }
-                    builder.show()
-
-                    binding.syncErrorView.visibility = View.VISIBLE
-                } else {
-                    binding.syncErrorView.visibility = View.VISIBLE
+                    builder?.show()
                 }
             } catch (exception : Exception){
                 exception.printStackTrace()
-                binding.syncErrorView.visibility = View.VISIBLE
+                val builder = activity?.let { AlertDialog.Builder(it) }
+                builder?.setTitle(R.string.network_error)
+                builder?.setMessage(exception.message)
+                builder?.setPositiveButton(R.string.yes){ _, _ ->
+
+                }
+                builder?.show()
             } finally {
                 binding.pullToRefresh.isRefreshing = false
             }

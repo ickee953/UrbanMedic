@@ -58,8 +58,10 @@ class LoginFragment : Fragment() {
                         Seed(binding.seed.text.toString())
                     )
 
-                    requireActivity().setResult(Activity.RESULT_OK)
-                    requireActivity().finish()
+                    activity?.let{
+                        it.setResult(Activity.RESULT_OK)
+                        it.finish()
+                    }
 
                 }
             }

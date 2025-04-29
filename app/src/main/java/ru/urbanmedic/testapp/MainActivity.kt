@@ -56,17 +56,4 @@ class MainActivity : AppCompatActivity() {
                 || super.onSupportNavigateUp()
     }
 
-    /*override fun onBackPressed() {
-
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-
-        val fragment = navHostFragment.childFragmentManager.fragments[0]
-        if( fragment != null && navController.currentDestination?.id == R.id.login_fragment){
-            super.onBackPressed()
-        } else {
-            finish()
-        }
-    }*/
 }
