@@ -25,6 +25,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/toggleButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/CustomButtonToggleGroup">
+                    <Button
+                        android:id="@+id/button1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ru"
+                        style="@style/CustomToggleButtonStyle" />
+                    <Button
+                        android:id="@+id/button2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/en"
+                        style="@style/CustomToggleButtonStyle" />
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
             </com.google.android.material.appbar.MaterialToolbar>
 
         </com.google.android.material.appbar.AppBarLayout>
@@ -59,9 +78,12 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout"
-            android:layout_width="@dimen/text_input_layout_width"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxWidth="@dimen/text_input_layout_width"
             android:layout_marginTop="@dimen/margin"
+            android:layout_marginLeft="@dimen/margin"
+            android:layout_marginRight="@dimen/margin"
             android:hint="@string/seed"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -71,6 +93,8 @@
                 android:id="@+id/seed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp"
                 android:singleLine="true"
                 android:hint="@string/enter_seed"/>
 
@@ -84,7 +108,7 @@
         android:layout_alignParentBottom="true">
 
         <androidx.appcompat.widget.AppCompatButton
-            style="@style/Widget.AppCompat.Button.Colored"
+            style="@style/BrandButtonTheme"
             android:theme="@style/BrandButtonTheme"
             android:id="@+id/login_btn"
             android:layout_width="match_parent"

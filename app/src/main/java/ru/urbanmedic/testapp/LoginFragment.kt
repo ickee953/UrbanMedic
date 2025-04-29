@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
@@ -41,28 +42,28 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.seed.addTextChangedListener {
-            binding.seed.error = null
+        binding.toggleButton.addOnButtonCheckedListener { toggleButton, checkedId, isChecked ->
+            //todo Respond to button selection
+        }
+
+        binding.loginBtn.isEnabled = false
+
+        binding.seed.doOnTextChanged { inputText, _, _, _ ->
+            binding.loginBtn.isEnabled = inputText!!.isNotBlank()
         }
 
         binding.loginBtn.setOnClickListener {
+            val seedDao: SeedDao = UrbanMedicDB.getDatabase(requireActivity().application).seedDao()
 
-            if(binding.seed.text!!.isNotBlank()){
+            lifecycleScope.launch {
+                seedDao.logout()
+                seedDao.login(
+                    Seed(binding.seed.text.toString())
+                )
 
-                val seedDao: SeedDao = UrbanMedicDB.getDatabase(requireActivity().application).seedDao()
-
-                lifecycleScope.launch {
-
-                    seedDao.logout()
-                    seedDao.login(
-                        Seed(binding.seed.text.toString())
-                    )
-
-                    activity?.let{
-                        it.setResult(Activity.RESULT_OK)
-                        it.finish()
-                    }
-
+                activity?.let{
+                    it.setResult(Activity.RESULT_OK)
+                    it.finish()
                 }
             }
         }

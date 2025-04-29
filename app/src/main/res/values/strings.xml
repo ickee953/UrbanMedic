@@ -70,4 +70,6 @@
     <string name="err_not_empty">You enter empty seed</string>
     <string name="attention">Attention</string>
     <string name="network_error">Network Error</string>
+    <string name="ru">ru</string>
+    <string name="en">en</string>
 </resources>

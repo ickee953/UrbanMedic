@@ -4,10 +4,13 @@
     <color name="white">#FFFFFFFF</color>
     <color name="brand">#00A5EE</color>
     <color name="button_color_second">#00CCE3</color>
+    <color name="brand_disabled">#99DBF8</color>
+    <color name="button_color_second_disabled">#A1EFED</color>
     <color name="dark_gray">#AEAEB2</color>
     <color name="gray">#D4D4D9</color>
     <color name="light_gray">#E5E5EA</color>
     <color name="text_primary">#3A3A3C</color>
     <color name="text_gray">#8E8E93</color>
     <color name="warning">#E61717</color>
+    <color name="tab_bar_color">#F7F7FA</color>
 </resources>

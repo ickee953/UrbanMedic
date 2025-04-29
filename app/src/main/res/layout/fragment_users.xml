@@ -34,6 +34,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/toggleButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/CustomButtonToggleGroup">
+                    <Button
+                        android:id="@+id/button1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ru"
+                        style="@style/CustomToggleButtonStyle" />
+                    <Button
+                        android:id="@+id/button2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/en"
+                        style="@style/CustomToggleButtonStyle" />
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
             </com.google.android.material.appbar.MaterialToolbar>
 
         </com.google.android.material.appbar.AppBarLayout>
@@ -46,7 +65,7 @@
             android:layout_alignParentBottom="true">
 
             <androidx.appcompat.widget.AppCompatButton
-                style="@style/Widget.AppCompat.Button.Colored"
+                style="@style/BrandButtonTheme"
                 android:theme="@style/BrandButtonTheme"
                 android:id="@+id/login_btn"
                 android:layout_width="match_parent"

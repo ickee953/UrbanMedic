@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape android:shape="rectangle"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <gradient
+        android:centerY="@dimen/gradient_offset"
+        android:angle="@dimen/gradient_angle"
+        android:type="linear"
+        android:startColor="@color/brand"
+        android:centerColor="@color/brand"
+        android:endColor="@color/button_color_second"/>
+
+    <corners android:radius="@dimen/btn_corner_radius"/>
+
+</shape>

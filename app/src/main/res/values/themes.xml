@@ -8,7 +8,7 @@
         <item name="colorError">@color/warning</item>
         <item name="android:colorBackground">@color/white</item>
         <item name="colorAccent">@color/brand</item>
-        <item name="buttonStyle">@style/BrandButtonTheme</item>
+        <item name="android:buttonStyle">@style/BrandButtonTheme</item>
         <item name="textInputStyle">@style/BrandTextInputLayoutTheme</item>
         <item name="editTextStyle">@style/BrandEditTextTheme</item>
         <item name="android:navigationBarColor">@color/white</item>
@@ -23,8 +23,8 @@
     </style>
 
     <style name="BrandButtonTheme" parent="Widget.MaterialComponents.Button">
-        <item name="backgroundTint">@color/brand</item>
-        <!--<item name="colorAccent">@color/brand</item>-->
+        <item name="backgroundTint">@null</item>
+        <item name="android:background">@drawable/selector_btn</item>
         <item name="android:paddingTop">14dp</item>
         <item name="android:paddingRight">16dp</item>
         <item name="android:paddingBottom">14dp</item>
@@ -36,21 +36,43 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:fontFamily">Roboto</item>
         <item name="android:fontWeight">500</item>
-        <!--<item name="android:lineHeight">20sp</item>-->
         <item name="android:spacing">0.18sp</item>
-        <!--<item name="android:textAppearance">?android:attr/textAppearanceMedium</item>-->
     </style>
 
-    <style name="SecondButtonTheme" parent="BrandButtonTheme">
-        <item name="backgroundTint">@color/light_gray</item>
-        <item name="android:textColor">@color/dark_gray</item>
+    <style name="CustomButtonToggleGroup" parent="Widget.MaterialComponents.MaterialButtonToggleGroup">
+        <item name="singleSelection">true</item>
+        <item name="selectionRequired">true</item>
+        <item name="android:innerRadius">6dp</item>
+    </style>
+
+    <style name="CustomToggleButtonStyle" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:spacing">0.15sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">Roboto</item>
+        <item name="strokeColor">@color/tab_bar_color</item>
+        <item name="strokeWidth">3dp</item>
+        <item name="iconPadding">0dp</item>
+        <item name="paddingStart">16dp</item>
+        <item name="paddingEnd">16dp</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingBottom">6dp</item>
+        <item name="contentPaddingTop">6dp</item>
+        <item name="contentPaddingBottom">6dp</item>
+        <item name="contentPaddingLeft">16dp</item>
+        <item name="contentPaddingRight">16dp</item>
+        <!--<item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>-->
     </style>
 
     <style name="BrandTextInputLayoutTheme" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
-        <item name="boxStrokeColor">@color/dark_gray</item>
+        <item name="boxStrokeColor">@color/gray</item>
         <item name="boxStrokeErrorColor">@color/warning</item>
-        <!--<item name="boxStrokeWidth">1dp</item>
-        <item name="boxStrokeWidthFocused">2dp</item>-->
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">1dp</item>
         <item name="helperTextEnabled">false</item>
         <item name="hintTextColor">@color/dark_gray</item>
         <item name="expandedHintEnabled">false</item>

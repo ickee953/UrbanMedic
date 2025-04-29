@@ -6,4 +6,7 @@
     <dimen name="margin">24dp</dimen>
     <dimen name="margin_middle">48dp</dimen>
     <dimen name="text_input_layout_width">318dp</dimen>
+    <dimen name="gradient_offset">20dp</dimen>
+    <dimen name="gradient_angle">-45</dimen>
+    <dimen name="btn_corner_radius">6dp</dimen>
 </resources>

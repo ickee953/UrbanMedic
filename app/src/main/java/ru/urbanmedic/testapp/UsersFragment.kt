@@ -91,12 +91,12 @@ class UsersFragment : Fragment() {
             permissions.getOrDefault(ACCESS_COARSE_LOCATION, false) -> {
                 requestCurrentLocation()
             } else -> {
-                val builder = AlertDialog.Builder(requireActivity())
-                builder.setMessage("No location access granted")
-                builder.setPositiveButton(R.string.yes){ _, _ ->
+                val builder = activity?.let{AlertDialog.Builder(it)}
+                builder?.setMessage("No location access granted")
+                builder?.setPositiveButton(R.string.yes){ _, _ ->
 
                 }
-                builder.show()
+                builder?.show()
             }
         }
     }
@@ -160,6 +160,7 @@ class UsersFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         (activity as MainActivity).setSupportActionBar(binding.toolbar)
+        (activity as MainActivity).supportActionBar?.title = ""
 
         binding.toolbar.isTitleCentered = true
 
@@ -171,10 +172,6 @@ class UsersFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun onStart() {
-        super.onStart()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -192,7 +189,7 @@ class UsersFragment : Fragment() {
             R.id.action_exit -> {
                 val builder = activity?.let { AlertDialog.Builder(it) }
 
-                builder?.setTitle(resources.getString(R.string.attention))
+                builder?.setTitle(resources.getString(R.string.exit))
                 builder?.setMessage(resources.getString(R.string.are_you_sure))
                 builder?.setPositiveButton(R.string.dialog_btn_yes) { _, _ ->
 
