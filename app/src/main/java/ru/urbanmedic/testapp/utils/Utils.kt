@@ -17,18 +17,18 @@ object Utils {
     private const val PREFERENCES_NAME      = "PREFERENCES_NAME"
     private const val CURRENT_LOCALE_PREF   = "CURRENT_LOCALE_PREF"
 
-    public fun setLanguagePref(context: Context?, localeKey: String) {
+    fun setLanguagePref(context: Context?, localeKey: String) {
         context?.getSharedPreferences(PREFERENCES_NAME, 0)?.edit() {
             putString(CURRENT_LOCALE_PREF, localeKey)
         }
     }
 
-    public fun getLanguagePref(context: Context?): String {
+    fun getLanguagePref(context: Context?): String {
         val sp = context?.getSharedPreferences(PREFERENCES_NAME, 0)
         return sp?.getString(CURRENT_LOCALE_PREF, "en")!!
     }
 
-    public fun setLocale(refreshable: RefreshableUI, context: Activity?, lang: String) {
+    fun setLocale(refreshable: RefreshableUI, context: Activity?, lang: String) {
         val myLocale = Locale(lang)
         val res = context?.resources!!
         val dm = res.displayMetrics
