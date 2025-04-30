@@ -9,6 +9,8 @@
 package ru.urbanmedic.testapp
 
 import android.app.Activity
+import android.content.Context
+import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -23,6 +25,7 @@ import ru.urbanmedic.testapp.db.SeedDao
 import ru.urbanmedic.testapp.db.UrbanMedicDB
 import ru.urbanmedic.testapp.model.Seed
 import java.util.Locale
+import androidx.core.content.edit
 
 
 class LoginFragment : Fragment() {
@@ -56,8 +59,14 @@ class LoginFragment : Fragment() {
         binding.toggleButton.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if(isChecked)
                 when(checkedId) {
-                    R.id.ru -> setLocale("ru")
-                    R.id.en -> setLocale("en")
+                    R.id.ru -> {
+                        setLocale("ru")
+                        setLanguagePref(activity, "ru")
+                    }
+                    R.id.en -> {
+                        setLocale("en")
+                        setLanguagePref(activity, "en")
+                    }
                 }
         }
 
@@ -84,9 +93,31 @@ class LoginFragment : Fragment() {
         }
     }
 
+    val prefName = "preferenceName"
+    val langPref = "currentLang"
+
+    private fun setLanguagePref(mContext: Context?, localeKey: String) {
+        mContext?.getSharedPreferences(prefName, 0)?.edit() {
+            putString(langPref, localeKey)
+        }
+        //val appPreference: AppPreference = AppPreference(mContext)
+        //appPreference.setLanguage(localeKey)
+    }
+
+    fun getLanguagePref(mContext: Context?): String {
+        val sp = mContext?.getSharedPreferences(prefName, 0)
+        return sp?.getString(langPref, "en")!!
+        //val appPreference: AppPreference = AppPreference(mContext)
+        //return appPreference.getLanguage()
+    }
+
     override fun onResume() {
-        setLocale("ru")
-        binding.toggleButton.check(R.id.ru)
+        val locale = getLanguagePref(activity?.applicationContext)
+        setLocale(locale)
+        when(locale){
+            "ru" -> binding.toggleButton.check(R.id.ru)
+            "en" -> binding.toggleButton.check(R.id.en)
+        }
 
         super.onResume()
     }
