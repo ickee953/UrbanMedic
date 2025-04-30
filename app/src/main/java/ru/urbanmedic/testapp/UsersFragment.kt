@@ -13,6 +13,7 @@ import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -42,13 +43,17 @@ import ru.urbanmedic.testapp.db.UrbanMedicDB
 import ru.urbanmedic.testapp.model.Seed
 import ru.urbanmedic.testapp.repository.GeoRepository
 import ru.urbanmedic.testapp.repository.UserRepository
+import ru.urbanmedic.testapp.utils.RefreshableUI
+import ru.urbanmedic.testapp.utils.Utils.getLanguagePref
+import ru.urbanmedic.testapp.utils.Utils.setLanguagePref
+import ru.urbanmedic.testapp.utils.Utils.setLocale
 import ru.urbanmedic.testapp.vo.GeoVO
 import java.util.LinkedList
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class UsersFragment : Fragment() {
+class UsersFragment : Fragment(), RefreshableUI {
 
     private var _binding: FragmentUsersBinding? = null
 
@@ -163,12 +168,14 @@ class UsersFragment : Fragment() {
 
         binding.toggleButton.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if(isChecked)
-                when(checkedId){
+                when(checkedId) {
                     R.id.ru -> {
-
+                        setLocale(this, activity,"ru")
+                        setLanguagePref(activity, "ru")
                     }
                     R.id.en -> {
-
+                        setLocale(this, activity,"en")
+                        setLanguagePref(activity, "en")
                     }
                 }
         }
@@ -181,6 +188,14 @@ class UsersFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         (activity as MainActivity).supportActionBar?.title = ""
+
+        val locale = getLanguagePref(activity?.applicationContext)
+        setLocale(this, activity,locale)
+
+        when(locale){
+            "ru" -> binding.toggleButton.check(R.id.ru)
+            "en" -> binding.toggleButton.check(R.id.en)
+        }
     }
 
     override fun onDestroyView() {
@@ -316,5 +331,9 @@ class UsersFragment : Fragment() {
             }
 
         }
+    }
+
+    override fun refreshUI() {
+        binding.newContactBtn.setText(R.string.new_contact)
     }
 }

@@ -67,7 +67,7 @@
             <androidx.appcompat.widget.AppCompatButton
                 style="@style/BrandButtonTheme"
                 android:theme="@style/BrandButtonTheme"
-                android:id="@+id/login_btn"
+                android:id="@+id/new_contact_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"

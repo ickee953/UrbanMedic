@@ -9,8 +9,6 @@
 package ru.urbanmedic.testapp
 
 import android.app.Activity
-import android.content.Context
-import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,11 +22,13 @@ import ru.urbanmedic.testapp.databinding.FragmentLoginBinding
 import ru.urbanmedic.testapp.db.SeedDao
 import ru.urbanmedic.testapp.db.UrbanMedicDB
 import ru.urbanmedic.testapp.model.Seed
-import java.util.Locale
-import androidx.core.content.edit
+import ru.urbanmedic.testapp.utils.RefreshableUI
+import ru.urbanmedic.testapp.utils.Utils.getLanguagePref
+import ru.urbanmedic.testapp.utils.Utils.setLanguagePref
+import ru.urbanmedic.testapp.utils.Utils.setLocale
 
 
-class LoginFragment : Fragment() {
+class LoginFragment : Fragment(), RefreshableUI {
 
     private var _binding : FragmentLoginBinding? = null
     private val binding get() = _binding!!
@@ -48,11 +48,6 @@ class LoginFragment : Fragment() {
         return binding.root
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        updateUI()
-        super.onConfigurationChanged(newConfig)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -60,11 +55,11 @@ class LoginFragment : Fragment() {
             if(isChecked)
                 when(checkedId) {
                     R.id.ru -> {
-                        setLocale("ru")
+                        setLocale(this, activity,"ru")
                         setLanguagePref(activity, "ru")
                     }
                     R.id.en -> {
-                        setLocale("en")
+                        setLocale(this, activity,"en")
                         setLanguagePref(activity, "en")
                     }
                 }
@@ -93,47 +88,19 @@ class LoginFragment : Fragment() {
         }
     }
 
-    val prefName = "preferenceName"
-    val langPref = "currentLang"
-
-    private fun setLanguagePref(mContext: Context?, localeKey: String) {
-        mContext?.getSharedPreferences(prefName, 0)?.edit() {
-            putString(langPref, localeKey)
-        }
-        //val appPreference: AppPreference = AppPreference(mContext)
-        //appPreference.setLanguage(localeKey)
-    }
-
-    fun getLanguagePref(mContext: Context?): String {
-        val sp = mContext?.getSharedPreferences(prefName, 0)
-        return sp?.getString(langPref, "en")!!
-        //val appPreference: AppPreference = AppPreference(mContext)
-        //return appPreference.getLanguage()
-    }
-
     override fun onResume() {
+        super.onResume()
+
         val locale = getLanguagePref(activity?.applicationContext)
-        setLocale(locale)
+        setLocale(this, activity,locale)
+
         when(locale){
             "ru" -> binding.toggleButton.check(R.id.ru)
             "en" -> binding.toggleButton.check(R.id.en)
         }
-
-        super.onResume()
     }
 
-    private fun setLocale(lang: String) {
-        val myLocale = Locale(lang)
-        val res = resources
-        val dm = res.displayMetrics
-        val conf = res.configuration
-        conf.locale = myLocale
-        res.updateConfiguration(conf, dm)
-        Locale.setDefault(myLocale)
-        onConfigurationChanged(conf)
-    }
-
-    private fun updateUI(){
+    override fun refreshUI(){
         binding.enterSeedTextView.setText(R.string.seed)
         binding.textInputLayout.setHint(R.string.seed_hint)
         binding.seed.setHint(R.string.seed)
