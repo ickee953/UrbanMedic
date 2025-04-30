@@ -10,7 +10,6 @@ package ru.urbanmedic.testapp
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -29,7 +28,6 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
-import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity.RESULT_OK
 import androidx.core.app.ActivityCompat
@@ -135,10 +133,10 @@ class UsersFragment : Fragment() {
         launcher = registerForActivityResult<Intent, ActivityResult>(
             StartActivityForResult()
         ) { result: ActivityResult ->
-            if (result.resultCode != RESULT_OK) {
-                activity?.finish()
-            } else {
+            if (result.resultCode == RESULT_OK) {
                 init()
+            } else {
+                activity?.finish()
             }
         }
 
@@ -160,13 +158,29 @@ class UsersFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         (activity as MainActivity).setSupportActionBar(binding.toolbar)
-        (activity as MainActivity).supportActionBar?.title = ""
 
         binding.toolbar.isTitleCentered = true
+
+        binding.toggleButton.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if(isChecked)
+                when(checkedId){
+                    R.id.ru -> {
+
+                    }
+                    R.id.en -> {
+
+                    }
+                }
+        }
 
         /*binding.addUserBtn.setOnClickListener {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
         }*/
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as MainActivity).supportActionBar?.title = ""
     }
 
     override fun onDestroyView() {

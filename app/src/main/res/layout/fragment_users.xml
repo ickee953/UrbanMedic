@@ -40,13 +40,13 @@
                     android:layout_height="wrap_content"
                     style="@style/CustomButtonToggleGroup">
                     <Button
-                        android:id="@+id/button1"
+                        android:id="@+id/ru"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/ru"
                         style="@style/CustomToggleButtonStyle" />
                     <Button
-                        android:id="@+id/button2"
+                        android:id="@+id/en"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/en"

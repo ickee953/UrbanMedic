@@ -8,6 +8,7 @@
 
 package ru.urbanmedic.testapp
 
+import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import ru.urbanmedic.testapp.databinding.ActivityLoginBinding
@@ -25,6 +26,10 @@ class LoginActivity : AppCompatActivity() {
 
         _binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+    }
+
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
     }
 
 }

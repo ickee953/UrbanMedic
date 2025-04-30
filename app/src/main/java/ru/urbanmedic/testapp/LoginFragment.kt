@@ -9,11 +9,11 @@
 package ru.urbanmedic.testapp
 
 import android.app.Activity
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -22,11 +22,17 @@ import ru.urbanmedic.testapp.databinding.FragmentLoginBinding
 import ru.urbanmedic.testapp.db.SeedDao
 import ru.urbanmedic.testapp.db.UrbanMedicDB
 import ru.urbanmedic.testapp.model.Seed
+import java.util.Locale
+
 
 class LoginFragment : Fragment() {
 
     private var _binding : FragmentLoginBinding? = null
     private val binding get() = _binding!!
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,11 +45,20 @@ class LoginFragment : Fragment() {
         return binding.root
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        updateUI()
+        super.onConfigurationChanged(newConfig)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.toggleButton.addOnButtonCheckedListener { toggleButton, checkedId, isChecked ->
-            //todo Respond to button selection
+        binding.toggleButton.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if(isChecked)
+                when(checkedId) {
+                    R.id.ru -> setLocale("ru")
+                    R.id.en -> setLocale("en")
+                }
         }
 
         binding.loginBtn.isEnabled = false
@@ -67,5 +82,30 @@ class LoginFragment : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        setLocale("ru")
+        binding.toggleButton.check(R.id.ru)
+
+        super.onResume()
+    }
+
+    private fun setLocale(lang: String) {
+        val myLocale = Locale(lang)
+        val res = resources
+        val dm = res.displayMetrics
+        val conf = res.configuration
+        conf.locale = myLocale
+        res.updateConfiguration(conf, dm)
+        Locale.setDefault(myLocale)
+        onConfigurationChanged(conf)
+    }
+
+    private fun updateUI(){
+        binding.enterSeedTextView.setText(R.string.enter_seed)
+        binding.textInputLayout.setHint(R.string.seed)
+        binding.seed.setHint(R.string.enter_seed)
+        binding.loginBtn.setText(R.string.sign_in)
     }
 }
