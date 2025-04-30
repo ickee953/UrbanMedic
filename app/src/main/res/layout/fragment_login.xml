@@ -74,7 +74,7 @@
             app:layout_constraintTop_toBottomOf="@+id/appCompatImageView"
             android:textColor="@color/text_primary"
             android:textAlignment="center"
-            android:text="@string/enter_seed"/>
+            android:text="@string/seed"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout"
