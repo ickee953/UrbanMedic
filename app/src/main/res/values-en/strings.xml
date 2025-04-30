@@ -45,8 +45,7 @@
     </string>
 
     <string name="sign_in">Sign in</string>
-    <string name="seed">Seed</string>
-    <string name="enter_seed">Enter Seed</string>
+    <string name="seed">Enter seed</string>
     <string name="last_name">Last name</string>
     <string name="email">Email</string>
     <string name="add_contact">Add contact</string>
@@ -62,6 +61,7 @@
     <string name="new_contact">New contact</string>
     <string name="edit">Edit</string>
     <string name="save">Save</string>
+    <string name="seed_hint">Seed</string>
     <string name="yes">OK</string>
     <string name="sync_error">Sync error!</string>
     <string name="retry">Retry</string>

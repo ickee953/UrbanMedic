@@ -84,7 +84,7 @@
             android:layout_marginTop="@dimen/margin"
             android:layout_marginLeft="@dimen/margin"
             android:layout_marginRight="@dimen/margin"
-            android:hint="@string/seed"
+            android:hint="@string/seed_hint"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/enterSeedTextView">
@@ -96,7 +96,7 @@
                 android:paddingStart="0dp"
                 android:paddingEnd="0dp"
                 android:singleLine="true"
-                android:hint="@string/enter_seed"/>
+                android:hint="@string/seed"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 

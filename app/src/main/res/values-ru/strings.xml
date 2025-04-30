@@ -45,23 +45,23 @@
     </string>
 
     <string name="sign_in">Войти</string>
-    <string name="seed">Сид</string>
-    <string name="enter_seed">Введите сид</string>
-    <string name="last_name">Last name</string>
+    <string name="seed">Укажите сид</string>
+    <string name="last_name">Фамилия</string>
     <string name="email">Email</string>
-    <string name="add_contact">Add contact</string>
-    <string name="are_you_sure">Are you sure you want to sign out?</string>
+    <string name="add_contact">Добавить контакт</string>
+    <string name="are_you_sure">Вы уверены, что хотите выйти?</string>
     <string name="information_will_be_deleted">
-        When you exit, the information about your saved contacts will be deleted
+        При выходе информация о сохранённых контактах будет удалена
     </string>
     <string name="information_will_not_be_saved">
-        When you exit, the information you entered ill not be saved
+        При выходе введённая информация не сохранится
     </string>
-    <string name="cancel">Cancel</string>
-    <string name="exit">Exit</string>
-    <string name="new_contact">New contact</string>
-    <string name="edit">Edit</string>
-    <string name="save">Save</string>
+    <string name="cancel">Отмена</string>
+    <string name="exit">Выйти</string>
+    <string name="new_contact">Новый контакт</string>
+    <string name="edit">Редактировать</string>
+    <string name="save">Сохранить</string>
+    <string name="seed_hint">Сид</string>
     <string name="yes">OK</string>
     <string name="sync_error">Sync error!</string>
     <string name="retry">Retry</string>
