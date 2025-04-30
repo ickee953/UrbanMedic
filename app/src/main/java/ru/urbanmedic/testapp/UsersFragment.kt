@@ -118,6 +118,10 @@ class UsersFragment : Fragment() {
 
         locationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
+        seedDao = UrbanMedicDB.getDatabase(requireActivity()).seedDao()
+
+        init()
+
         if( ActivityCompat.checkSelfPermission(requireActivity(), ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
             && ActivityCompat.checkSelfPermission(requireActivity(), ACCESS_COARSE_LOCATION
@@ -128,8 +132,6 @@ class UsersFragment : Fragment() {
             requestCurrentLocation()
         }
 
-        seedDao = UrbanMedicDB.getDatabase(requireActivity()).seedDao()
-
         launcher = registerForActivityResult<Intent, ActivityResult>(
             StartActivityForResult()
         ) { result: ActivityResult ->
@@ -139,8 +141,6 @@ class UsersFragment : Fragment() {
                 activity?.finish()
             }
         }
-
-        init()
     }
 
     override fun onCreateView(
