@@ -54,18 +54,10 @@
         <item name="strokeColor">@color/tab_bar_color</item>
         <item name="strokeWidth">3dp</item>
         <item name="iconPadding">0dp</item>
-        <item name="paddingStart">16dp</item>
-        <item name="paddingEnd">16dp</item>
         <item name="android:paddingTop">6dp</item>
         <item name="android:paddingBottom">6dp</item>
-        <item name="contentPaddingTop">6dp</item>
-        <item name="contentPaddingBottom">6dp</item>
-        <item name="contentPaddingLeft">16dp</item>
-        <item name="contentPaddingRight">16dp</item>
-        <!--<item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
         <item name="android:paddingLeft">16dp</item>
-        <item name="android:paddingRight">16dp</item>-->
+        <item name="android:paddingRight">16dp</item>
     </style>
 
     <style name="BrandTextInputLayoutTheme" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">

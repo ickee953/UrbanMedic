@@ -29,17 +29,23 @@
                     android:id="@+id/toggleButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
                     style="@style/CustomButtonToggleGroup">
                     <Button
                         android:id="@+id/ru"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
                         android:text="@string/ru"
                         style="@style/CustomToggleButtonStyle" />
                     <Button
                         android:id="@+id/en"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
                         android:text="@string/en"
                         style="@style/CustomToggleButtonStyle" />
                 </com.google.android.material.button.MaterialButtonToggleGroup>

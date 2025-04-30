@@ -203,8 +203,8 @@ class UsersFragment : Fragment() {
             R.id.action_exit -> {
                 val builder = activity?.let { AlertDialog.Builder(it) }
 
-                builder?.setTitle(resources.getString(R.string.exit))
-                builder?.setMessage(resources.getString(R.string.are_you_sure))
+                builder?.setTitle(resources.getString(R.string.are_you_sure))
+                builder?.setMessage(resources.getString(R.string.information_will_be_deleted))
                 builder?.setPositiveButton(R.string.dialog_btn_yes) { _, _ ->
 
                     lifecycleScope.launch {
