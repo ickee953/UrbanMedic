@@ -103,9 +103,9 @@ class LoginFragment : Fragment() {
     }
 
     private fun updateUI(){
-        binding.enterSeedTextView.setText(R.string.enter_seed)
-        binding.textInputLayout.setHint(R.string.seed)
-        binding.seed.setHint(R.string.enter_seed)
+        binding.enterSeedTextView.setText(R.string.seed)
+        binding.textInputLayout.setHint(R.string.seed_hint)
+        binding.seed.setHint(R.string.seed)
         binding.loginBtn.setText(R.string.sign_in)
     }
 }
