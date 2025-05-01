@@ -10,10 +10,10 @@ package ru.urbanmedic.testapp
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.Configuration
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -80,6 +80,7 @@ class UsersFragment : Fragment(), RefreshableUI {
     private var launcher: ActivityResultLauncher<Intent>? = null
 
     private var users: MutableList<UserItem> = LinkedList()
+    private lateinit var usersAdapter: UsersListAdapter
 
     private var currentPage: Int = 0
     private var seed: Seed? = null
@@ -146,6 +147,8 @@ class UsersFragment : Fragment(), RefreshableUI {
                 activity?.finish()
             }
         }
+
+        usersAdapter = UsersListAdapter(users)
     }
 
     override fun onCreateView(
@@ -154,6 +157,9 @@ class UsersFragment : Fragment(), RefreshableUI {
     ): View {
 
         _binding = FragmentUsersBinding.inflate(inflater, container, false)
+
+        var recyclerView = binding.recyclerItemsView
+        recyclerView.adapter = usersAdapter
 
         return binding.root
 
@@ -178,6 +184,10 @@ class UsersFragment : Fragment(), RefreshableUI {
                         setLanguagePref(activity, "en")
                     }
                 }
+        }
+
+        binding.pullToRefresh.setOnRefreshListener {
+            reloadUsers(seed!!.value!!)
         }
 
         /*binding.addUserBtn.setOnClickListener {
@@ -260,6 +270,7 @@ class UsersFragment : Fragment(), RefreshableUI {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun reloadUsers(seed: String) {
         users.clear()
         
@@ -272,11 +283,10 @@ class UsersFragment : Fragment(), RefreshableUI {
             try {
                 val response = userRepository.allUsers(
                     "${RetrofitBuilder.USER_BASE_URL}/${RetrofitBuilder.USER_API_PATH}" +
-                            "?page=${currentPage}&results=${RetrofitBuilder.USER_API_RESULTS}seed=${seed}"
+                            "?page=${currentPage}&results=${RetrofitBuilder.USER_API_RESULTS}&seed=${seed}"
                 )
 
                 if( response.code() == 200 ){
-
                     val usersResponse = response.body()
                     usersResponse!!.results.forEach{
                         users.add(
@@ -287,6 +297,14 @@ class UsersFragment : Fragment(), RefreshableUI {
                     val builder = activity?.let { AlertDialog.Builder(it) }
                     builder?.setTitle("Bad Gateway")
                     builder?.setMessage("HTTP 502 - Unable to Connect to the Origin Server: ${RetrofitBuilder.USER_BASE_URL}")
+                    builder?.setPositiveButton(R.string.yes){ _, _ ->
+
+                    }
+                    builder?.show()
+                } else {
+                    val builder = activity?.let { AlertDialog.Builder(it) }
+                    builder?.setTitle(R.string.network_error)
+                    builder?.setMessage("HTTP ${response.code()} - Can't fetch data from Server: ${RetrofitBuilder.USER_BASE_URL}")
                     builder?.setPositiveButton(R.string.yes){ _, _ ->
 
                     }
@@ -304,7 +322,7 @@ class UsersFragment : Fragment(), RefreshableUI {
             } finally {
                 binding.pullToRefresh.isRefreshing = false
             }
-
+            usersAdapter.notifyDataSetChanged()
         }
     }
 
