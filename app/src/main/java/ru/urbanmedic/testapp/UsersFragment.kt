@@ -33,6 +33,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity.RESULT_OK
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import kotlinx.coroutines.launch
 import ru.urbanmedic.testapp.data.api.ApiHelper
 import ru.urbanmedic.testapp.data.api.GeoHelper
@@ -190,7 +192,7 @@ class UsersFragment : Fragment(), RefreshableUI {
         }
 
         binding.pullToRefresh.setOnRefreshListener {
-            reloadUsers(seed!!.value!!)
+            reloadUsersList()
         }
 
         /*binding.addUserBtn.setOnClickListener {
@@ -262,14 +264,26 @@ class UsersFragment : Fragment(), RefreshableUI {
 
                 launcher?.launch(intent)
             } else {
-                reloadUsers(seed!!.value!!)
+                reloadUsersList()
             }
 
         }
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun reloadUsers(seed: String) {
+    private fun reloadUsersList(){
+        currentPage = 0
+        val loadedUsers = loadUsers(seed!!.value!!, currentPage)
+        if (loadedUsers != null) {
+            users.clear()
+            users.addAll(loadedUsers)
+        }
+        usersAdapter.notifyDataSetChanged()
+    }
+
+    private fun loadUsers(seed: String, page: Int): Collection<UserItem>? {
+
+        var resultList: ArrayList<UserItem>? = null
 
         lifecycleScope.launch {
 
@@ -280,14 +294,16 @@ class UsersFragment : Fragment(), RefreshableUI {
             try {
                 val response = userRepository.allUsers(
                     "${RetrofitBuilder.USER_BASE_URL}/${RetrofitBuilder.USER_API_PATH}" +
-                            "?page=${currentPage}&results=${RetrofitBuilder.USER_API_RESULTS}&seed=${seed}"
+                            "?page=${page}&results=${RetrofitBuilder.USER_API_RESULTS}&seed=${seed}"
                 )
 
                 if( response.code() == 200 ){
                     val usersResponse = response.body()
-                    users.clear()
-                    usersResponse!!.results.forEach{
-                        users.add(
+
+                    resultList = ArrayList<UserItem>(usersResponse!!.results.size)
+
+                    usersResponse.results.forEach{
+                        resultList!!.add(
                             UserItem(it.email, it.userName?.lastName)
                         )
                     }
@@ -296,13 +312,13 @@ class UsersFragment : Fragment(), RefreshableUI {
                         requireContext(), "Bad Gateway",
                         "HTTP 502 - Unable to Connect to the Origin Server: ${RetrofitBuilder.USER_BASE_URL}",
                         R.string.yes, null
-                    ) {}
+                    )
                 } else {
                     showDialog(
                         requireContext(), R.string.network_error,
                         "HTTP ${response.code()} - Can't fetch data from Server: ${RetrofitBuilder.USER_BASE_URL}",
                         R.string.yes, null
-                    ) {}
+                    )
                 }
             } catch (exception : Exception){
                 exception.printStackTrace()
@@ -312,13 +328,14 @@ class UsersFragment : Fragment(), RefreshableUI {
                         R.string.network_error,
                         it,
                         R.string.yes, null
-                    ) {}
+                    )
                 }
             } finally {
                 binding.pullToRefresh.isRefreshing = false
             }
-            usersAdapter.notifyDataSetChanged()
         }
+
+        return resultList
     }
 
     private fun loadCityByGeo(lat: Double, lon: Double) {
