@@ -43,10 +43,13 @@ class UsersListAdapter(
         user.let {
             holder.itemView.tag = user
 
-            if(position % 2 == 0){
-                holder.viewLayout.apply {
-                    val res = context!!.resources
+            holder.viewLayout.apply {
+                val res = context!!.resources
+
+                if (position % 2 == 0) {
                     setBackgroundColor(res.getColor(R.color.light_gray))
+                } else {
+                    setBackgroundColor(res.getColor(R.color.white))
                 }
             }
             val num = position + 1
