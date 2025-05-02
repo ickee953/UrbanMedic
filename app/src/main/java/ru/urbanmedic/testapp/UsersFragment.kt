@@ -44,6 +44,7 @@ import ru.urbanmedic.testapp.model.Seed
 import ru.urbanmedic.testapp.repository.GeoRepository
 import ru.urbanmedic.testapp.repository.UserRepository
 import ru.urbanmedic.testapp.utils.RefreshableUI
+import ru.urbanmedic.testapp.utils.Utils
 import ru.urbanmedic.testapp.utils.Utils.getLanguagePref
 import ru.urbanmedic.testapp.utils.Utils.setLanguagePref
 import ru.urbanmedic.testapp.utils.Utils.setLocale
@@ -226,23 +227,17 @@ class UsersFragment : Fragment(), RefreshableUI {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_exit -> {
-                val builder = activity?.let { AlertDialog.Builder(it) }
-
-                builder?.setTitle(resources.getString(R.string.are_you_sure))
-                builder?.setMessage(resources.getString(R.string.information_will_be_deleted))
-                builder?.setPositiveButton(R.string.dialog_btn_yes) { _, _ ->
-
+                Utils.showDialog(
+                    activity, resources.getString(R.string.are_you_sure),
+                    resources.getString(R.string.information_will_be_deleted),
+                    R.string.dialog_btn_yes, R.string.dialog_btn_no){
                     lifecycleScope.launch {
                         if(seedDao.loggedIn() != null) {
                             seedDao.logout()
                             init()
                         }
                     }
-
                 }
-                builder?.setNegativeButton(R.string.dialog_btn_no) { _, _ ->
-                }
-                builder?.show()
 
                 true
             }
@@ -294,31 +289,29 @@ class UsersFragment : Fragment(), RefreshableUI {
                         )
                     }
                 } else if( response.code() == 502 ) {
-                    val builder = activity?.let { AlertDialog.Builder(it) }
-                    builder?.setTitle("Bad Gateway")
-                    builder?.setMessage("HTTP 502 - Unable to Connect to the Origin Server: ${RetrofitBuilder.USER_BASE_URL}")
-                    builder?.setPositiveButton(R.string.yes){ _, _ ->
-
-                    }
-                    builder?.show()
+                    Utils.showDialog(
+                        activity, "Bad Gateway",
+                        "HTTP 502 - Unable to Connect to the Origin Server: ${RetrofitBuilder.USER_BASE_URL}",
+                        R.string.yes, null
+                    ) {}
                 } else {
-                    val builder = activity?.let { AlertDialog.Builder(it) }
-                    builder?.setTitle(R.string.network_error)
-                    builder?.setMessage("HTTP ${response.code()} - Can't fetch data from Server: ${RetrofitBuilder.USER_BASE_URL}")
-                    builder?.setPositiveButton(R.string.yes){ _, _ ->
-
+                    activity?.let {
+                        Utils.showDialog(
+                            it, it.getString(R.string.network_error),
+                            "HTTP ${response.code()} - Can't fetch data from Server: ${RetrofitBuilder.USER_BASE_URL}",
+                            R.string.yes, null
+                        ) {}
                     }
-                    builder?.show()
                 }
             } catch (exception : Exception){
                 exception.printStackTrace()
-                val builder = activity?.let { AlertDialog.Builder(it) }
-                builder?.setTitle(R.string.network_error)
-                builder?.setMessage(exception.message)
-                builder?.setPositiveButton(R.string.yes){ _, _ ->
-
+                activity?.let {
+                    Utils.showDialog(
+                        it, it.getString(R.string.network_error),
+                        exception.message,
+                        R.string.yes, null
+                    ) {}
                 }
-                builder?.show()
             } finally {
                 binding.pullToRefresh.isRefreshing = false
             }

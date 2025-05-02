@@ -10,7 +10,10 @@ package ru.urbanmedic.testapp.utils
 
 import android.app.Activity
 import android.content.Context
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.edit
+import kotlinx.coroutines.Job
+import ru.urbanmedic.testapp.R
 import java.util.Locale
 
 object Utils {
@@ -38,5 +41,25 @@ object Utils {
         Locale.setDefault(myLocale)
         refreshable.refreshUI()
         context.onConfigurationChanged(conf)
+    }
+
+    fun showDialog(
+        activity: Activity?,
+        title: String?,
+        message: String?,
+        positiveBtnStringId: Int,
+        negativeBtnStringId: Int?,
+        function: () -> Unit
+    ) {
+        val builder = activity?.let { AlertDialog.Builder(it) }
+        builder?.setTitle(title)
+        builder?.setMessage(message)
+        builder?.setPositiveButton(positiveBtnStringId){ _, _ ->
+            function()
+        }
+        if (negativeBtnStringId != null) {
+            builder?.setNegativeButton(negativeBtnStringId){ _, _ ->}
+        }
+        builder?.show()
     }
 }
