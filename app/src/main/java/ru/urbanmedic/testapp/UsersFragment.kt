@@ -267,8 +267,7 @@ class UsersFragment : Fragment(), RefreshableUI {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun reloadUsers(seed: String) {
-        users.clear()
-        
+
         lifecycleScope.launch {
 
             binding.pullToRefresh.isRefreshing = true
@@ -283,6 +282,7 @@ class UsersFragment : Fragment(), RefreshableUI {
 
                 if( response.code() == 200 ){
                     val usersResponse = response.body()
+                    users.clear()
                     usersResponse!!.results.forEach{
                         users.add(
                             UserItem(it.email, it.userName?.lastName)
