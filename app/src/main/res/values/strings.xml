@@ -72,4 +72,6 @@
     <string name="network_error">Network Error</string>
     <string name="ru">ru</string>
     <string name="en">en</string>
+    <string name="permission_required">Permission required</string>
+    <string name="no_localtion_permission">No location access granted</string>
 </resources>

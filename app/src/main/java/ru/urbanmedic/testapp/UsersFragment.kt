@@ -43,6 +43,8 @@ import ru.urbanmedic.testapp.db.UrbanMedicDB
 import ru.urbanmedic.testapp.model.Seed
 import ru.urbanmedic.testapp.repository.GeoRepository
 import ru.urbanmedic.testapp.repository.UserRepository
+import ru.urbanmedic.testapp.utils.DialogHelper
+import ru.urbanmedic.testapp.utils.DialogHelper.showDialog
 import ru.urbanmedic.testapp.utils.RefreshableUI
 import ru.urbanmedic.testapp.utils.Utils
 import ru.urbanmedic.testapp.utils.Utils.getLanguagePref
@@ -96,12 +98,12 @@ class UsersFragment : Fragment(), RefreshableUI {
             permissions.getOrDefault(ACCESS_COARSE_LOCATION, false) -> {
                 requestCurrentLocation()
             } else -> {
-                val builder = activity?.let{AlertDialog.Builder(it)}
-                builder?.setMessage("No location access granted")
-                builder?.setPositiveButton(R.string.yes){ _, _ ->
-
-                }
-                builder?.show()
+                showDialog(
+                    requireContext(),
+                    R.string.permission_required,
+                    R.string.no_localtion_permission,
+                    R.string.yes
+                )
             }
         }
     }
@@ -159,7 +161,7 @@ class UsersFragment : Fragment(), RefreshableUI {
 
         _binding = FragmentUsersBinding.inflate(inflater, container, false)
 
-        var recyclerView = binding.recyclerItemsView
+        val recyclerView = binding.recyclerItemsView
         recyclerView.adapter = usersAdapter
 
         return binding.root
@@ -227,8 +229,9 @@ class UsersFragment : Fragment(), RefreshableUI {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_exit -> {
-                Utils.showDialog(
-                    activity, resources.getString(R.string.are_you_sure),
+                showDialog(
+                    requireContext(),
+                    resources.getString(R.string.are_you_sure),
                     resources.getString(R.string.information_will_be_deleted),
                     R.string.dialog_btn_yes, R.string.dialog_btn_no){
                     lifecycleScope.launch {
@@ -289,26 +292,25 @@ class UsersFragment : Fragment(), RefreshableUI {
                         )
                     }
                 } else if( response.code() == 502 ) {
-                    Utils.showDialog(
-                        activity, "Bad Gateway",
+                    showDialog(
+                        requireContext(), "Bad Gateway",
                         "HTTP 502 - Unable to Connect to the Origin Server: ${RetrofitBuilder.USER_BASE_URL}",
                         R.string.yes, null
                     ) {}
                 } else {
-                    activity?.let {
-                        Utils.showDialog(
-                            it, it.getString(R.string.network_error),
-                            "HTTP ${response.code()} - Can't fetch data from Server: ${RetrofitBuilder.USER_BASE_URL}",
-                            R.string.yes, null
-                        ) {}
-                    }
+                    showDialog(
+                        requireContext(), R.string.network_error,
+                        "HTTP ${response.code()} - Can't fetch data from Server: ${RetrofitBuilder.USER_BASE_URL}",
+                        R.string.yes, null
+                    ) {}
                 }
             } catch (exception : Exception){
                 exception.printStackTrace()
-                activity?.let {
-                    Utils.showDialog(
-                        it, it.getString(R.string.network_error),
-                        exception.message,
+                exception.message?.let {
+                    showDialog(
+                        requireContext(),
+                        R.string.network_error,
+                        it,
                         R.string.yes, null
                     ) {}
                 }
@@ -340,7 +342,6 @@ class UsersFragment : Fragment(), RefreshableUI {
             } finally {
 
             }
-
         }
     }
 
