@@ -8,15 +8,18 @@
 
 package ru.urbanmedic.testapp
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import ru.urbanmedic.testapp.utils.Pageable
 
 class UsersListAdapter(
-    private val users: List<UserItem>
+    private var users: MutableList<UserItem>,
+    private val pageable: Pageable
 ) : RecyclerView.Adapter<UsersListAdapter.UserViewHolder>(){
 
     inner class UserViewHolder(view: View) : RecyclerView.ViewHolder(view){
@@ -39,6 +42,10 @@ class UsersListAdapter(
     }
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
+        if(position+1 == users.size){
+            pageable.loadNextPage()
+        }
+
         val user = users[position]
         user.let {
             holder.itemView.tag = user
@@ -56,6 +63,14 @@ class UsersListAdapter(
             holder.numTextView.text         = "$num"
             holder.emailTextView.text       = it.email
             holder.lastNameTextView.text    = it.lastname
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateDataset(newDataset: List<UserItem>?) {
+        if(newDataset != null){
+            users.addAll(newDataset)
+            notifyDataSetChanged()
         }
     }
 

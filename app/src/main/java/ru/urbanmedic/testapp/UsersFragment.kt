@@ -10,7 +10,6 @@ package ru.urbanmedic.testapp
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -29,13 +28,13 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity.RESULT_OK
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.OnScrollListener
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import ru.urbanmedic.testapp.data.api.ApiHelper
 import ru.urbanmedic.testapp.data.api.GeoHelper
 import ru.urbanmedic.testapp.data.api.RetrofitBuilder
@@ -45,10 +44,9 @@ import ru.urbanmedic.testapp.db.UrbanMedicDB
 import ru.urbanmedic.testapp.model.Seed
 import ru.urbanmedic.testapp.repository.GeoRepository
 import ru.urbanmedic.testapp.repository.UserRepository
-import ru.urbanmedic.testapp.utils.DialogHelper
 import ru.urbanmedic.testapp.utils.DialogHelper.showDialog
+import ru.urbanmedic.testapp.utils.Pageable
 import ru.urbanmedic.testapp.utils.RefreshableUI
-import ru.urbanmedic.testapp.utils.Utils
 import ru.urbanmedic.testapp.utils.Utils.getLanguagePref
 import ru.urbanmedic.testapp.utils.Utils.setLanguagePref
 import ru.urbanmedic.testapp.utils.Utils.setLocale
@@ -58,7 +56,7 @@ import java.util.LinkedList
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class UsersFragment : Fragment(), RefreshableUI {
+class UsersFragment : Fragment(), RefreshableUI, Pageable {
 
     private var _binding: FragmentUsersBinding? = null
 
@@ -153,7 +151,7 @@ class UsersFragment : Fragment(), RefreshableUI {
             }
         }
 
-        usersAdapter = UsersListAdapter(users)
+        usersAdapter = UsersListAdapter(users, this)
     }
 
     override fun onCreateView(
@@ -192,7 +190,9 @@ class UsersFragment : Fragment(), RefreshableUI {
         }
 
         binding.pullToRefresh.setOnRefreshListener {
-            reloadUsersList()
+            lifecycleScope.launch {
+                loadUsersList()
+            }
         }
 
         /*binding.addUserBtn.setOnClickListener {
@@ -235,14 +235,16 @@ class UsersFragment : Fragment(), RefreshableUI {
                     requireContext(),
                     resources.getString(R.string.are_you_sure),
                     resources.getString(R.string.information_will_be_deleted),
-                    R.string.dialog_btn_yes, R.string.dialog_btn_no){
-                    lifecycleScope.launch {
-                        if(seedDao.loggedIn() != null) {
-                            seedDao.logout()
-                            init()
+                    R.string.dialog_btn_yes,
+                    R.string.dialog_btn_no,
+                    {
+                        lifecycleScope.launch {
+                            if(seedDao.loggedIn() != null) {
+                                seedDao.logout()
+                                init()
+                            }
                         }
-                    }
-                }
+                    },{})
 
                 true
             }
@@ -270,73 +272,74 @@ class UsersFragment : Fragment(), RefreshableUI {
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    private fun reloadUsersList(){
+    private suspend fun reloadUsersList(){
         currentPage = 0
-        val loadedUsers = loadUsers(seed!!.value!!, currentPage)
-        if (loadedUsers != null) {
-            users.clear()
-            users.addAll(loadedUsers)
-        }
-        usersAdapter.notifyDataSetChanged()
+        loadUsersList()
     }
 
-    private fun loadUsers(seed: String, page: Int): Collection<UserItem>? {
+    private suspend fun loadUsersList(){
+        val loadedUsers = loadUsers(seed!!.value!!, currentPage)
+        val users = loadedUsers.await()
+        usersAdapter.updateDataset(users)
+    }
 
-        var resultList: ArrayList<UserItem>? = null
+    private fun loadUsers(seed: String, page: Int): Deferred<MutableList<UserItem>?> =
 
-        lifecycleScope.launch {
+        lifecycleScope.async {
 
-            binding.pullToRefresh.isRefreshing = true
+                var resultList: ArrayList<UserItem>? = null
 
-            val userRepository = UserRepository(ApiHelper(RetrofitBuilder.apiService))
+                binding.pullToRefresh.isRefreshing = true
 
-            try {
-                val response = userRepository.allUsers(
-                    "${RetrofitBuilder.USER_BASE_URL}/${RetrofitBuilder.USER_API_PATH}" +
-                            "?page=${page}&results=${RetrofitBuilder.USER_API_RESULTS}&seed=${seed}"
-                )
+                val userRepository = UserRepository(ApiHelper(RetrofitBuilder.apiService))
 
-                if( response.code() == 200 ){
-                    val usersResponse = response.body()
+                try {
+                    val response = userRepository.allUsers(
+                        "${RetrofitBuilder.USER_BASE_URL}/${RetrofitBuilder.USER_API_PATH}" +
+                                "?page=${page}&results=${RetrofitBuilder.USER_API_RESULTS}&seed=${seed}"
+                    )
 
-                    resultList = ArrayList<UserItem>(usersResponse!!.results.size)
+                    if( response.code() == 200 ){
+                        val usersResponse = response.body()
 
-                    usersResponse.results.forEach{
-                        resultList!!.add(
-                            UserItem(it.email, it.userName?.lastName)
+                        resultList = ArrayList(usersResponse!!.results.size)
+
+                        usersResponse.results.forEach{
+                            resultList.add(
+                                UserItem(it.email, it.userName?.lastName)
+                            )
+                        }
+
+                        //usersAdapter.updateDataset(resultList)
+                    } else if( response.code() == 502 ) {
+                        showDialog(
+                            requireContext(), "Bad Gateway",
+                            "HTTP 502 - Unable to Connect to the Origin Server: ${RetrofitBuilder.USER_BASE_URL}",
+                            R.string.yes, null
+                        )
+                    } else {
+                        showDialog(
+                            requireContext(), R.string.network_error,
+                            "HTTP ${response.code()} - Can't fetch data from Server: ${RetrofitBuilder.USER_BASE_URL}",
+                            R.string.yes, null
                         )
                     }
-                } else if( response.code() == 502 ) {
-                    showDialog(
-                        requireContext(), "Bad Gateway",
-                        "HTTP 502 - Unable to Connect to the Origin Server: ${RetrofitBuilder.USER_BASE_URL}",
-                        R.string.yes, null
-                    )
-                } else {
-                    showDialog(
-                        requireContext(), R.string.network_error,
-                        "HTTP ${response.code()} - Can't fetch data from Server: ${RetrofitBuilder.USER_BASE_URL}",
-                        R.string.yes, null
-                    )
+                } catch (exception : Exception){
+                    exception.printStackTrace()
+                    exception.message?.let {
+                        showDialog(
+                            requireContext(),
+                            R.string.network_error,
+                            it,
+                            R.string.yes, null
+                        )
+                    }
+                } finally {
+                    binding.pullToRefresh.isRefreshing = false
                 }
-            } catch (exception : Exception){
-                exception.printStackTrace()
-                exception.message?.let {
-                    showDialog(
-                        requireContext(),
-                        R.string.network_error,
-                        it,
-                        R.string.yes, null
-                    )
-                }
-            } finally {
-                binding.pullToRefresh.isRefreshing = false
-            }
-        }
 
-        return resultList
-    }
+                return@async resultList
+            }
 
     private fun loadCityByGeo(lat: Double, lon: Double) {
         val geoRepository = GeoRepository(GeoHelper(RetrofitBuilder.geoService))
@@ -364,5 +367,12 @@ class UsersFragment : Fragment(), RefreshableUI {
 
     override fun refreshUI() {
         binding.newContactBtn.setText(R.string.new_contact)
+    }
+
+    override fun loadNextPage() {
+        currentPage++
+        lifecycleScope.launch {
+            loadUsersList()
+        }
     }
 }

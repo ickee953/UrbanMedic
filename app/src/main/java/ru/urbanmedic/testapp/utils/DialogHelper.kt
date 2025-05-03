@@ -67,7 +67,7 @@ object DialogHelper {
                 resources.getString(titleId),
                 resources.getString(messageId),
                 positiveBtnStrId,
-                null,
+                null
             )
         }
     }
