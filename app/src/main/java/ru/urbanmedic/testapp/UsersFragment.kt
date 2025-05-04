@@ -31,6 +31,7 @@ import androidx.activity.result.contract.ActivityResultContracts.StartActivityFo
 import androidx.appcompat.app.AppCompatActivity.RESULT_OK
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -195,9 +196,9 @@ class UsersFragment : Fragment(), RefreshableUI, Pageable {
             }
         }
 
-        /*binding.addUserBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
-        }*/
+        binding.newContactBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_update_user)
+        }
     }
 
     override fun onResume() {

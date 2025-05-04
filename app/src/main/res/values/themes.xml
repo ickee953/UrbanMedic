@@ -3,6 +3,7 @@
     <style name="Base.Theme.TestApp" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <item name="colorPrimary">@color/brand</item>
+        <item name="colorOnPrimary">@color/text_primary</item>
         <!--<item name="colorPrimaryVariant">@color/white</item>
         <item name="colorOnPrimary">@color/brand</item>-->
         <item name="colorError">@color/warning</item>
