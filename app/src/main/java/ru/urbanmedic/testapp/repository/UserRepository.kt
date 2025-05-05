@@ -12,11 +12,16 @@ import ru.urbanmedic.testapp.model.User
 
 interface UserRepository {
 
-    suspend fun allUsers(): Any
+    suspend fun loadUsers(
+        errorCallback: (errorCode: Int?, errorMsg: String?) -> Unit = {_,_->}
+    ): Collection<User>?
+
+    suspend fun loadPage(
+        page: Int,
+        errorCallback: (errorCode: Int?, errorMsg: String?) -> Unit = {_,_->}
+    ): Collection<User>?
 
     suspend fun clear()
-
-    suspend fun loadPage(page: Int): Any
 
     suspend fun createUser(user: User)
 

@@ -1,3 +1,11 @@
+/**
+ * © Panov Vitaly 2025 - All Rights Reserved
+ *
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Panov Vitaly 5 May 2025
+ */
+
 package ru.urbanmedic.testapp.repository
 
 import android.content.Context
@@ -9,24 +17,41 @@ class UserLocalRepository(private val userDao: UserDao): UserRepository {
 
     constructor(context: Context) : this(UrbanMedicDB.getDatabase(context).userDao())
 
-    override suspend fun allUsers(): List<User> = userDao.all()
+    override suspend fun loadUsers(errorCallback: (errorCode: Int?, errorMsg: String?) -> Unit): Collection<User> {
+        val localUsersList = userDao.all()
+        val resultList: ArrayList<User> = ArrayList(localUsersList.size)
 
-    override suspend fun clear() = userDao.clear()
+        localUsersList.forEach{
+            resultList.add(
+                User(it.id, it.email, it.lastName)
+            )
+        }
 
+        return resultList
+    }
 
-    override suspend fun loadPage(page: Int): List<User> {
+    override suspend fun loadPage(
+        page: Int,
+        errorCallback: (errorCode: Int?, errorMsg: String?) -> Unit
+    ): Collection<User>? {
         TODO("Not yet implemented")
+    }
+
+    override suspend fun clear() {
+        userDao.clear()
     }
 
     override suspend fun createUser(user: User) {
-        TODO("Not yet implemented")
+        userDao.create(user)
     }
 
     override suspend fun updateUser(user: User) {
-        TODO("Not yet implemented")
+        userDao.update(user)
     }
 
     override suspend fun deleteUser(user: User) {
-        TODO("Not yet implemented")
+        userDao.delete(user)
     }
+
+
 }

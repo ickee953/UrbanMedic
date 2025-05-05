@@ -33,30 +33,23 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import ru.urbanmedic.testapp.UpdateUserFragment.Companion.UPDATE_USER_PARAM
-import ru.urbanmedic.testapp.data.api.ApiHelper
-import ru.urbanmedic.testapp.data.api.GeoHelper
 import ru.urbanmedic.testapp.data.api.RetrofitBuilder
 import ru.urbanmedic.testapp.databinding.FragmentUsersBinding
 import ru.urbanmedic.testapp.db.SeedDao
 import ru.urbanmedic.testapp.db.UrbanMedicDB
-import ru.urbanmedic.testapp.db.UserDao
 import ru.urbanmedic.testapp.model.Seed
 import ru.urbanmedic.testapp.model.User
-import ru.urbanmedic.testapp.repository.GeoRepository
 import ru.urbanmedic.testapp.repository.UserLocalRepository
 import ru.urbanmedic.testapp.repository.UserNetworkRepository
-import ru.urbanmedic.testapp.repository.UserRepository
+import ru.urbanmedic.testapp.service.GeoService
 import ru.urbanmedic.testapp.utils.DialogHelper.showDialog
 import ru.urbanmedic.testapp.utils.Pageable
 import ru.urbanmedic.testapp.utils.RefreshableUI
 import ru.urbanmedic.testapp.utils.Utils.getLanguagePref
 import ru.urbanmedic.testapp.utils.Utils.setLanguagePref
 import ru.urbanmedic.testapp.utils.Utils.setLocale
-import ru.urbanmedic.testapp.vo.GeoVO
 import java.util.LinkedList
 
 /**
@@ -74,7 +67,11 @@ class UsersFragment : Fragment(), RefreshableUI, Pageable {
 
     private val locationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
-            loadCityByGeo(location.latitude, location.longitude)
+            val geoService = GeoService()
+            lifecycleScope.launch {
+                val city = geoService.loadCityByGeo(location.latitude, location.longitude)
+                (activity as MainActivity).supportActionBar?.title = city
+            }
         }
 
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
@@ -307,114 +304,55 @@ class UsersFragment : Fragment(), RefreshableUI, Pageable {
     }
 
     private suspend fun loadUsersListLocal(){
-        val localUsers = loadLocalUsers().await()
-
+        val userRepository = UserLocalRepository(requireContext())
+        val localUsers = userRepository.loadUsers()
+        val result = ArrayList<UserItem>(localUsers.size)
+        localUsers.forEach { user ->
+            result.add(
+                UserItem(user.id, user.email, user.lastName, true)
+            )
+        }
         synchronized(usersAdapter){
-            usersAdapter.appendFirstDataset(localUsers)
+            usersAdapter.prependDataset(result)
         }
     }
 
     private suspend fun loadUsersListByNetwork(){
-        val loadedUsersByNetwork = loadNetworkUsers(seed!!.value!!, currentPage).await()
-
-        synchronized(usersAdapter){
-            usersAdapter.appendDataset(loadedUsersByNetwork)
-        }
-    }
-
-    private fun loadLocalUsers(): Deferred<MutableList<UserItem>?> =
-        lifecycleScope.async {
-            val userLocalRepository = UserLocalRepository(requireContext())
-            val localUsersList = userLocalRepository.allUsers()
-            val resultList: ArrayList<UserItem> = ArrayList(localUsersList.size)
-
-            localUsersList.forEach{
-                resultList.add(
-                    UserItem(it.id, it.email, it.lastName, true)
+        val userRepository = UserNetworkRepository(seed!!.value!!)
+        binding.pullToRefresh.isRefreshing = true
+        val remoteUsers = userRepository.loadPage(currentPage){code, message ->
+            if( code == 502 ) {
+                showDialog(
+                    requireContext(), "Bad Gateway",
+                    "HTTP 502 - Unable to Connect to the Origin Server: ${RetrofitBuilder.USER_BASE_URL}",
+                    R.string.yes, null
+                )
+            } else if(message == null){
+                showDialog(
+                    requireContext(), R.string.network_error,
+                    "HTTP $code - Can't fetch data from Server: ${RetrofitBuilder.USER_BASE_URL}",
+                    R.string.yes, null
+                )
+            } else {
+                showDialog(
+                    requireContext(),
+                    R.string.network_error,
+                    message,
+                    R.string.yes, null
                 )
             }
-
-            return@async resultList
         }
+        binding.pullToRefresh.isRefreshing = false
 
-    private fun loadNetworkUsers(seed: String, page: Int): Deferred<MutableList<UserItem>?> =
-
-        lifecycleScope.async {
-
-                var resultList: ArrayList<UserItem>? = null
-
-                binding.pullToRefresh.isRefreshing = true
-
-                val userRepository = UserNetworkRepository(
-                    ApiHelper(RetrofitBuilder.apiService),
-                    seed
+        remoteUsers?.let {
+            val loadedUsersRemote = ArrayList<UserItem>(it.size)
+            remoteUsers.forEach { user ->
+                loadedUsersRemote.add(
+                    UserItem(user.id, user.email, user.lastName)
                 )
-
-                try {
-                    val response = userRepository.loadPage(page)
-
-                    if( response.code() == 200 ){
-                        val usersResponse = response.body()
-
-                        resultList = ArrayList(usersResponse!!.results.size)
-
-                        usersResponse.results.forEach{
-                            resultList.add(
-                                UserItem(null, it.email, it.userName?.lastName)
-                            )
-                        }
-
-                        //usersAdapter.updateDataset(resultList)
-                    } else if( response.code() == 502 ) {
-                        showDialog(
-                            requireContext(), "Bad Gateway",
-                            "HTTP 502 - Unable to Connect to the Origin Server: ${RetrofitBuilder.USER_BASE_URL}",
-                            R.string.yes, null
-                        )
-                    } else {
-                        showDialog(
-                            requireContext(), R.string.network_error,
-                            "HTTP ${response.code()} - Can't fetch data from Server: ${RetrofitBuilder.USER_BASE_URL}",
-                            R.string.yes, null
-                        )
-                    }
-                } catch (exception : Exception){
-                    exception.printStackTrace()
-                    exception.message?.let {
-                        showDialog(
-                            requireContext(),
-                            R.string.network_error,
-                            it,
-                            R.string.yes, null
-                        )
-                    }
-                } finally {
-                    binding.pullToRefresh.isRefreshing = false
-                }
-
-                return@async resultList
-        }
-
-    private fun loadCityByGeo(lat: Double, lon: Double) {
-        val geoRepository = GeoRepository(GeoHelper(RetrofitBuilder.geoService))
-
-        lifecycleScope.launch {
-
-            try {
-                val response = geoRepository.getCity(GeoVO(lat, lon))
-
-                if( response.code() == 200 ){
-                    val suggestionsList = response.body()!!.suggestionsVO
-                    if(suggestionsList.isNotEmpty()) {
-                        (activity as MainActivity).supportActionBar?.title = suggestionsList[0].suggestionDataVO.city
-                    }
-                } else {
-                    (activity as MainActivity).supportActionBar?.title = ""
-                }
-            } catch (exception : Exception){
-                exception.printStackTrace()
-            } finally {
-
+            }
+            synchronized(usersAdapter){
+                usersAdapter.appendDataset(loadedUsersRemote)
             }
         }
     }

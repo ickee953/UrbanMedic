@@ -46,7 +46,7 @@ class UsersListAdapter(
     }
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
-        if(position > RetrofitBuilder.USER_API_RESULTS && position+1 == users.size){
+        if(position+1 >= RetrofitBuilder.USER_API_RESULTS && position+1 == users.size){
             pageable.loadNextPage()
         }
 
@@ -85,7 +85,7 @@ class UsersListAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun appendFirstDataset(dataset: List<UserItem>?) {
+    fun prependDataset(dataset: List<UserItem>?) {
         if(dataset != null){
             users.addAll(0, dataset)
             notifyDataSetChanged()
