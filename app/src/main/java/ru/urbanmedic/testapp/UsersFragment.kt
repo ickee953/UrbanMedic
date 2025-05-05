@@ -35,6 +35,7 @@ import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import ru.urbanmedic.testapp.UpdateUserFragment.Companion.UPDATE_USER_PARAM
 import ru.urbanmedic.testapp.data.api.ApiHelper
 import ru.urbanmedic.testapp.data.api.GeoHelper
 import ru.urbanmedic.testapp.data.api.RetrofitBuilder
@@ -43,6 +44,7 @@ import ru.urbanmedic.testapp.db.SeedDao
 import ru.urbanmedic.testapp.db.UrbanMedicDB
 import ru.urbanmedic.testapp.db.UserDao
 import ru.urbanmedic.testapp.model.Seed
+import ru.urbanmedic.testapp.model.User
 import ru.urbanmedic.testapp.repository.GeoRepository
 import ru.urbanmedic.testapp.repository.UserLocalRepository
 import ru.urbanmedic.testapp.repository.UserNetworkRepository
@@ -201,6 +203,11 @@ class UsersFragment : Fragment(), RefreshableUI, Pageable {
         binding.newContactBtn.setOnClickListener {
             findNavController().navigate(R.id.action_update_user)
         }
+
+        findNavController().currentBackStackEntry?.savedStateHandle
+            ?.getLiveData<User>(UPDATE_USER_PARAM)?.observe(viewLifecycleOwner) {
+                reloadUsersList()
+            }
     }
 
     override fun onResume() {
@@ -245,7 +252,9 @@ class UsersFragment : Fragment(), RefreshableUI, Pageable {
                                 seedDao.logout()
                                 val userRepository = UserLocalRepository(requireContext())
                                 userRepository.clear()
-                                init()
+
+                                val intent = Intent(activity, LoginActivity::class.java)
+                                launcher?.launch(intent)
                             }
                         }
                     },{})
@@ -304,8 +313,6 @@ class UsersFragment : Fragment(), RefreshableUI, Pageable {
 
     private fun loadLocalUsers(): Deferred<MutableList<UserItem>?> =
         lifecycleScope.async {
-            /*val userDao: UserDao = UrbanMedicDB.getDatabase(requireActivity().application).userDao()
-            val localUsersList = userDao.all()*/
             val userLocalRepository = UserLocalRepository(requireContext())
             val localUsersList = userLocalRepository.allUsers()
             val resultList: ArrayList<UserItem> = ArrayList(localUsersList.size)
@@ -333,11 +340,6 @@ class UsersFragment : Fragment(), RefreshableUI, Pageable {
                 )
 
                 try {
-                    /*val response = userRepository.allUsers(
-                        "${RetrofitBuilder.USER_BASE_URL}/${RetrofitBuilder.USER_API_PATH}" +
-                                "?page=${page}&results=${RetrofitBuilder.USER_API_RESULTS}&seed=${seed}"
-                    )*/
-
                     val response = userRepository.loadPage(page)
 
                     if( response.code() == 200 ){

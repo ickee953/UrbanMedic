@@ -15,9 +15,12 @@ import ru.urbanmedic.testapp.databinding.FragmentUpdateUserBinding
 import ru.urbanmedic.testapp.db.UrbanMedicDB
 import ru.urbanmedic.testapp.db.UserDao
 import ru.urbanmedic.testapp.model.User
-import ru.urbanmedic.testapp.utils.DialogHelper.showDialog
 
 class UpdateUserFragment: Fragment() {
+
+    companion object {
+        const val UPDATE_USER_PARAM = "updateUser"
+    }
 
     private var _binding : FragmentUpdateUserBinding? = null
 
@@ -46,11 +49,18 @@ class UpdateUserFragment: Fragment() {
 
         binding.saveBtn.setOnClickListener {
             val userDao: UserDao = UrbanMedicDB.getDatabase(requireActivity().application).userDao()
-            val user = User(null, binding.email.text.toString(), binding.lastName.text.toString())
+
+           val user = User(
+                id = 0,
+                email = binding.email.text.toString(),
+                lastName = binding.lastName.text.toString()
+            )
 
             lifecycleScope.launch {
                 userDao.create(user)
 
+                findNavController().previousBackStackEntry?.savedStateHandle
+                    ?.set(UPDATE_USER_PARAM, user)
                 findNavController().navigateUp()
             }
         }
