@@ -14,20 +14,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.recyclerview.widget.RecyclerView
 import ru.urbanmedic.testapp.data.api.RetrofitBuilder
 import ru.urbanmedic.testapp.utils.Pageable
 
 class UsersListAdapter(
     private var users: MutableList<UserItem>,
-    private val pageable: Pageable
+    private val pageable: Pageable,
+    private val onEditClickListener: View.OnClickListener
 ) : RecyclerView.Adapter<UsersListAdapter.UserViewHolder>(){
 
     inner class UserViewHolder(view: View) : RecyclerView.ViewHolder(view){
-        var viewLayout: LinearLayout    = view.findViewById(R.id.viewLayout)
-        var numTextView: TextView       = view.findViewById(R.id.numTextView)
-        var emailTextView: TextView     = view.findViewById(R.id.emailTextView)
-        var lastNameTextView: TextView  = view.findViewById(R.id.lastNameTextView)
+        var viewLayout: LinearLayout        = view.findViewById(R.id.viewLayout)
+        var numTextView: TextView           = view.findViewById(R.id.numTextView)
+        var emailTextView: TextView         = view.findViewById(R.id.emailTextView)
+        var lastNameTextView: TextView      = view.findViewById(R.id.lastNameTextView)
+        var editBtn: AppCompatImageButton   = view.findViewById(R.id.edit_btn)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
@@ -49,8 +52,6 @@ class UsersListAdapter(
 
         val user = users[position]
         user.let {
-            holder.itemView.tag = user
-
             holder.viewLayout.apply {
                 val res = context!!.resources
 
@@ -64,6 +65,14 @@ class UsersListAdapter(
             holder.numTextView.text         = "$num"
             holder.emailTextView.text       = it.email
             holder.lastNameTextView.text    = it.lastname
+
+            when(user.editable){
+                true  ->  holder.editBtn.visibility = View.VISIBLE
+                false -> holder.editBtn.visibility = View.GONE
+            }
+
+            holder.editBtn.tag = user
+            holder.editBtn.setOnClickListener(onEditClickListener)
         }
     }
 

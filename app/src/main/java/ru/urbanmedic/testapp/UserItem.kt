@@ -9,6 +9,8 @@
 package ru.urbanmedic.testapp
 
 data class UserItem(
-    var email: String?,
-    var lastname: String?
+    val id: Long?,
+    val email: String?,
+    val lastname: String?,
+    val editable: Boolean = false
 )

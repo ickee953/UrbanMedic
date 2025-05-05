@@ -1,34 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/viewLayout"
-    android:orientation="horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/numTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.1"
-        android:textColor="@color/text_primary"
-        android:layout_margin="@dimen/margin_min_1"
-        android:textAlignment="center"/>
+    <LinearLayout
+        android:id="@+id/viewLayout"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/lastNameTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.25"
-        android:layout_margin="@dimen/margin_min_1"
-        android:textColor="@color/text_primary" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/numTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:textColor="@color/text_primary"
+            android:layout_margin="@dimen/margin_min_1"
+            android:textAlignment="center"/>
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/emailTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.65"
-        android:layout_margin="@dimen/margin_min_1"
-        android:textColor="@color/text_primary" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/lastNameTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:layout_margin="@dimen/margin_min_1"
+            android:textColor="@color/text_primary" />
 
-</LinearLayout>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/emailTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.65"
+            android:layout_margin="@dimen/margin_min_1"
+            android:textColor="@color/text_primary" />
+
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/edit_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_min_1"
+        android:layout_alignParentEnd="true"
+        android:background="@null"
+        app:srcCompat="@drawable/baseline_edit_24" />
+
+</RelativeLayout>

@@ -31,6 +31,7 @@ import androidx.activity.result.contract.ActivityResultContracts.StartActivityFo
 import androidx.appcompat.app.AppCompatActivity.RESULT_OK
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
@@ -156,7 +157,17 @@ class UsersFragment : Fragment(), RefreshableUI, Pageable {
             }
         }
 
-        usersAdapter = UsersListAdapter(users, this)
+        usersAdapter = UsersListAdapter(users, this) { itemView ->
+            val item = itemView.tag as UserItem
+            val bundle = Bundle()
+            item.id?.let {
+                bundle.putLong(UpdateUserFragment.ARG_ID, it)
+            }
+            bundle.putString(UpdateUserFragment.ARG_EMAIL, item.email)
+            bundle.putString(UpdateUserFragment.ARG_LAST_NAME, item.lastname)
+
+            itemView.findNavController().navigate(R.id.action_update_user, bundle)
+        }
     }
 
     override fun onCreateView(
@@ -319,7 +330,7 @@ class UsersFragment : Fragment(), RefreshableUI, Pageable {
 
             localUsersList.forEach{
                 resultList.add(
-                    UserItem(it.email, it.lastName)
+                    UserItem(it.id, it.email, it.lastName, true)
                 )
             }
 
@@ -349,7 +360,7 @@ class UsersFragment : Fragment(), RefreshableUI, Pageable {
 
                         usersResponse.results.forEach{
                             resultList.add(
-                                UserItem(it.email, it.userName?.lastName)
+                                UserItem(null, it.email, it.userName?.lastName)
                             )
                         }
 

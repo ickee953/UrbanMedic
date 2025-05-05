@@ -20,11 +20,16 @@ class UpdateUserFragment: Fragment() {
 
     companion object {
         const val UPDATE_USER_PARAM = "updateUser"
+        const val ARG_ID            = "id"
+        const val ARG_EMAIL         = "email"
+        const val ARG_LAST_NAME     = "lastName"
     }
 
     private var _binding : FragmentUpdateUserBinding? = null
 
     private val binding get() = _binding!!
+
+    private var userId: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,18 +55,34 @@ class UpdateUserFragment: Fragment() {
         binding.saveBtn.setOnClickListener {
             val userDao: UserDao = UrbanMedicDB.getDatabase(requireActivity().application).userDao()
 
-           val user = User(
-                id = 0,
+            val user = User(
+                id = userId,
                 email = binding.email.text.toString(),
                 lastName = binding.lastName.text.toString()
             )
 
             lifecycleScope.launch {
-                userDao.create(user)
+                if(userId == 0.toLong()){
+                    userDao.create(user)   
+                } else {
+                    userDao.update(user)
+                }
 
                 findNavController().previousBackStackEntry?.savedStateHandle
                     ?.set(UPDATE_USER_PARAM, user)
                 findNavController().navigateUp()
+            }
+        }
+
+        if(arguments != null){
+            if(requireArguments().containsKey(ARG_ID)){
+                userId = requireArguments().getLong(ARG_ID)
+            }
+            if(requireArguments().containsKey(ARG_EMAIL)){
+                binding.email.setText(requireArguments().getString(ARG_EMAIL))
+            }
+            if(requireArguments().containsKey(ARG_LAST_NAME)){
+                binding.lastName.setText(requireArguments().getString(ARG_LAST_NAME))
             }
         }
     }
