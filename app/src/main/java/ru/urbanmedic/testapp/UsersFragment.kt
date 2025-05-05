@@ -35,15 +35,17 @@ import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import ru.urbanmedic.testapp.data.api.ApiHelper
 import ru.urbanmedic.testapp.data.api.GeoHelper
 import ru.urbanmedic.testapp.data.api.RetrofitBuilder
 import ru.urbanmedic.testapp.databinding.FragmentUsersBinding
 import ru.urbanmedic.testapp.db.SeedDao
 import ru.urbanmedic.testapp.db.UrbanMedicDB
+import ru.urbanmedic.testapp.db.UserDao
 import ru.urbanmedic.testapp.model.Seed
 import ru.urbanmedic.testapp.repository.GeoRepository
+import ru.urbanmedic.testapp.repository.UserLocalRepository
+import ru.urbanmedic.testapp.repository.UserNetworkRepository
 import ru.urbanmedic.testapp.repository.UserRepository
 import ru.urbanmedic.testapp.utils.DialogHelper.showDialog
 import ru.urbanmedic.testapp.utils.Pageable
@@ -130,8 +132,6 @@ class UsersFragment : Fragment(), RefreshableUI, Pageable {
 
         seedDao = UrbanMedicDB.getDatabase(requireActivity()).seedDao()
 
-        init()
-
         if( ActivityCompat.checkSelfPermission(requireActivity(), ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
             && ActivityCompat.checkSelfPermission(requireActivity(), ACCESS_COARSE_LOCATION
@@ -142,7 +142,9 @@ class UsersFragment : Fragment(), RefreshableUI, Pageable {
             requestCurrentLocation()
         }
 
-        launcher = registerForActivityResult<Intent, ActivityResult>(
+        if(users.isEmpty()) init()
+
+        launcher = registerForActivityResult(
             StartActivityForResult()
         ) { result: ActivityResult ->
             if (result.resultCode == RESULT_OK) {
@@ -173,7 +175,7 @@ class UsersFragment : Fragment(), RefreshableUI, Pageable {
         super.onViewCreated(view, savedInstanceState)
 
         (activity as MainActivity).setSupportActionBar(binding.toolbar)
-
+        (activity as MainActivity).supportActionBar?.title = ""
         binding.toolbar.isTitleCentered = true
 
         binding.toggleButton.addOnButtonCheckedListener { _, checkedId, isChecked ->
@@ -192,7 +194,7 @@ class UsersFragment : Fragment(), RefreshableUI, Pageable {
 
         binding.pullToRefresh.setOnRefreshListener {
             lifecycleScope.launch {
-                loadUsersList()
+                reloadUsersList()
             }
         }
 
@@ -203,7 +205,6 @@ class UsersFragment : Fragment(), RefreshableUI, Pageable {
 
     override fun onResume() {
         super.onResume()
-        (activity as MainActivity).supportActionBar?.title = ""
 
         val locale = getLanguagePref(activity?.applicationContext)
         setLocale(this, activity,locale)
@@ -242,6 +243,8 @@ class UsersFragment : Fragment(), RefreshableUI, Pageable {
                         lifecycleScope.launch {
                             if(seedDao.loggedIn() != null) {
                                 seedDao.logout()
+                                val userRepository = UserLocalRepository(requireContext())
+                                userRepository.clear()
                                 init()
                             }
                         }
@@ -254,8 +257,6 @@ class UsersFragment : Fragment(), RefreshableUI, Pageable {
     }
 
     private fun init() {
-
-        (activity as MainActivity).supportActionBar?.title = ""
 
         lifecycleScope.launch {
             seed = seedDao.loggedIn()
@@ -273,18 +274,52 @@ class UsersFragment : Fragment(), RefreshableUI, Pageable {
         }
     }
 
-    private suspend fun reloadUsersList(){
+    private fun reloadUsersList(){
         currentPage = 0
-        loadUsersList()
+        users.clear()
+
+        lifecycleScope.launch {
+            loadUsersListLocal()
+        }
+        lifecycleScope.launch {
+            loadUsersListByNetwork()
+        }
     }
 
-    private suspend fun loadUsersList(){
-        val loadedUsers = loadUsers(seed!!.value!!, currentPage)
-        val users = loadedUsers.await()
-        usersAdapter.updateDataset(users)
+    private suspend fun loadUsersListLocal(){
+        val localUsers = loadLocalUsers().await()
+
+        synchronized(usersAdapter){
+            usersAdapter.appendFirstDataset(localUsers)
+        }
     }
 
-    private fun loadUsers(seed: String, page: Int): Deferred<MutableList<UserItem>?> =
+    private suspend fun loadUsersListByNetwork(){
+        val loadedUsersByNetwork = loadNetworkUsers(seed!!.value!!, currentPage).await()
+
+        synchronized(usersAdapter){
+            usersAdapter.appendDataset(loadedUsersByNetwork)
+        }
+    }
+
+    private fun loadLocalUsers(): Deferred<MutableList<UserItem>?> =
+        lifecycleScope.async {
+            /*val userDao: UserDao = UrbanMedicDB.getDatabase(requireActivity().application).userDao()
+            val localUsersList = userDao.all()*/
+            val userLocalRepository = UserLocalRepository(requireContext())
+            val localUsersList = userLocalRepository.allUsers()
+            val resultList: ArrayList<UserItem> = ArrayList(localUsersList.size)
+
+            localUsersList.forEach{
+                resultList.add(
+                    UserItem(it.email, it.lastName)
+                )
+            }
+
+            return@async resultList
+        }
+
+    private fun loadNetworkUsers(seed: String, page: Int): Deferred<MutableList<UserItem>?> =
 
         lifecycleScope.async {
 
@@ -292,13 +327,18 @@ class UsersFragment : Fragment(), RefreshableUI, Pageable {
 
                 binding.pullToRefresh.isRefreshing = true
 
-                val userRepository = UserRepository(ApiHelper(RetrofitBuilder.apiService))
+                val userRepository = UserNetworkRepository(
+                    ApiHelper(RetrofitBuilder.apiService),
+                    seed
+                )
 
                 try {
-                    val response = userRepository.allUsers(
+                    /*val response = userRepository.allUsers(
                         "${RetrofitBuilder.USER_BASE_URL}/${RetrofitBuilder.USER_API_PATH}" +
                                 "?page=${page}&results=${RetrofitBuilder.USER_API_RESULTS}&seed=${seed}"
-                    )
+                    )*/
+
+                    val response = userRepository.loadPage(page)
 
                     if( response.code() == 200 ){
                         val usersResponse = response.body()
@@ -340,7 +380,7 @@ class UsersFragment : Fragment(), RefreshableUI, Pageable {
                 }
 
                 return@async resultList
-            }
+        }
 
     private fun loadCityByGeo(lat: Double, lon: Double) {
         val geoRepository = GeoRepository(GeoHelper(RetrofitBuilder.geoService))
@@ -373,7 +413,7 @@ class UsersFragment : Fragment(), RefreshableUI, Pageable {
     override fun loadNextPage() {
         currentPage++
         lifecycleScope.launch {
-            loadUsersList()
+            loadUsersListByNetwork()
         }
     }
 }

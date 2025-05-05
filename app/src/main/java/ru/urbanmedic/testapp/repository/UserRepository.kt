@@ -3,15 +3,24 @@
  *
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
- * Written by Panov Vitaly 27 April 2025
+ * Written by Panov Vitaly 4 May 2025
  */
 
-package ru.urbanmedic.testapp.repository
+package ru.urbanmedic.testapp.repository;
 
-import ru.urbanmedic.testapp.data.api.ApiHelper
+import ru.urbanmedic.testapp.model.User
 
-class UserRepository(private val apiHelper: ApiHelper) {
+interface UserRepository {
 
-    suspend fun allUsers(url: String) = apiHelper.allUsers( url )
+    suspend fun allUsers(): Any
 
+    suspend fun clear()
+
+    suspend fun loadPage(page: Int): Any
+
+    suspend fun createUser(user: User)
+
+    suspend fun updateUser(user: User)
+
+    suspend fun deleteUser(user: User)
 }

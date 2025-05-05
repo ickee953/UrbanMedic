@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "a37329646c1a4c574d4980b3862d5821",
+    "identityHash": "0b1264ca6b7bc3498e8e513faf39da8a",
     "entities": [
       {
         "tableName": "seed",
@@ -14,7 +14,7 @@
             "affinity": "INTEGER"
           },
           {
-            "fieldPath": "seed",
+            "fieldPath": "value",
             "columnName": "seed",
             "affinity": "TEXT"
           }
@@ -39,12 +39,24 @@
       },
       {
         "tableName": "user",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `email` TEXT NOT NULL, `lastName` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "email",
+            "columnName": "email",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastName",
+            "columnName": "lastName",
+            "affinity": "TEXT",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -68,7 +80,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a37329646c1a4c574d4980b3862d5821')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0b1264ca6b7bc3498e8e513faf39da8a')"
     ]
   }
 }

@@ -12,6 +12,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.launch
 import ru.urbanmedic.testapp.databinding.FragmentUpdateUserBinding
+import ru.urbanmedic.testapp.db.UrbanMedicDB
+import ru.urbanmedic.testapp.db.UserDao
+import ru.urbanmedic.testapp.model.User
 import ru.urbanmedic.testapp.utils.DialogHelper.showDialog
 
 class UpdateUserFragment: Fragment() {
@@ -36,6 +39,21 @@ class UpdateUserFragment: Fragment() {
         (activity as MainActivity).supportActionBar?.title = resources.getString(R.string.edit)
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.saveBtn.setOnClickListener {
+            val userDao: UserDao = UrbanMedicDB.getDatabase(requireActivity().application).userDao()
+            val user = User(null, binding.email.text.toString(), binding.lastName.text.toString())
+
+            lifecycleScope.launch {
+                userDao.create(user)
+
+                findNavController().navigateUp()
+            }
+        }
     }
 
     override fun onDestroyView() {

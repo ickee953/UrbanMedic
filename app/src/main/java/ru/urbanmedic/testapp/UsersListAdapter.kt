@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import ru.urbanmedic.testapp.data.api.RetrofitBuilder
 import ru.urbanmedic.testapp.utils.Pageable
 
 class UsersListAdapter(
@@ -42,7 +43,7 @@ class UsersListAdapter(
     }
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
-        if(position+1 == users.size){
+        if(position > RetrofitBuilder.USER_API_RESULTS && position+1 == users.size){
             pageable.loadNextPage()
         }
 
@@ -67,9 +68,17 @@ class UsersListAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateDataset(newDataset: List<UserItem>?) {
-        if(newDataset != null){
-            users.addAll(newDataset)
+    fun appendDataset(dataset: List<UserItem>?) {
+        if(dataset != null){
+            users.addAll(dataset)
+            notifyDataSetChanged()
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun appendFirstDataset(dataset: List<UserItem>?) {
+        if(dataset != null){
+            users.addAll(0, dataset)
             notifyDataSetChanged()
         }
     }

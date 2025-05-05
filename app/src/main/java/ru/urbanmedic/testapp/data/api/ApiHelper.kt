@@ -10,6 +10,6 @@ package ru.urbanmedic.testapp.data.api;
 
 class ApiHelper( private val apiService: ApiService ) {
 
-    suspend fun allUsers(url: String) = apiService.allUsers(url)
+    suspend fun loadUsers(url: String) = apiService.loadUsers(url)
 
 }

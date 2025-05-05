@@ -21,6 +21,6 @@ import ru.urbanmedic.testapp.vo.UsersResultListVO
 interface ApiService {
 
     @GET()
-    suspend fun allUsers(@Url url: String) : Response<UsersResultListVO>
+    suspend fun loadUsers(@Url url: String) : Response<UsersResultListVO>
 
 }
