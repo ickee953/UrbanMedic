@@ -28,33 +28,54 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolbar"
-                style="@style/CustomToolBarTheme"
+            <!--<com.google.android.material.appbar.CollapsingToolbarLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                app:layout_scrollFlags="scroll|enterAlwaysCollapsed|exitUntilCollapsed">-->
 
-                <com.google.android.material.button.MaterialButtonToggleGroup
-                    android:id="@+id/toggleButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/CustomButtonToggleGroup">
-                    <Button
-                        android:id="@+id/ru"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/ru"
-                        style="@style/CustomToggleButtonStyle" />
-                    <Button
-                        android:id="@+id/en"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/en"
-                        style="@style/CustomToggleButtonStyle" />
-                </com.google.android.material.button.MaterialButtonToggleGroup>
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/toolbar"
+                    style="@style/CustomToolBarTheme"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-            </com.google.android.material.appbar.MaterialToolbar>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
+                        <com.google.android.material.button.MaterialButtonToggleGroup
+                            android:id="@+id/toggleButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:layout_margin="0dp"
+                            style="@style/CustomButtonToggleGroup">
+                            <Button
+                                android:id="@+id/ru"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/ru"
+                                style="@style/CustomToggleButtonStyle" />
+                            <Button
+                                android:id="@+id/en"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/en"
+                                style="@style/CustomToggleButtonStyle" />
+                        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/cityTextView"
+                            style="@style/TitleTextViewStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:textColor="@color/text_primary"/>
+
+                    </RelativeLayout>
+
+                </com.google.android.material.appbar.MaterialToolbar>
+            <!--</com.google.android.material.appbar.CollapsingToolbarLayout>-->
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.cardview.widget.CardView

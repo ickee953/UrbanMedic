@@ -70,7 +70,8 @@ class UsersFragment : Fragment(), RefreshableUI, Pageable {
             val geoService = GeoService()
             lifecycleScope.launch {
                 val city = geoService.loadCityByGeo(location.latitude, location.longitude)
-                (activity as MainActivity).supportActionBar?.title = city
+                //(activity as MainActivity).supportActionBar?.title = city
+                binding.cityTextView.text = city
             }
         }
 
@@ -185,8 +186,9 @@ class UsersFragment : Fragment(), RefreshableUI, Pageable {
         super.onViewCreated(view, savedInstanceState)
 
         (activity as MainActivity).setSupportActionBar(binding.toolbar)
-        (activity as MainActivity).supportActionBar?.title = ""
-        binding.toolbar.isTitleCentered = true
+        //(activity as MainActivity).supportActionBar?.title = "Test title"
+        //binding.toolbar.isTitleCentered = true
+        binding.cityTextView.text = ""
 
         binding.toggleButton.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if(isChecked)
