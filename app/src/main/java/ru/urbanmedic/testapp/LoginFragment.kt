@@ -9,7 +9,6 @@
 package ru.urbanmedic.testapp
 
 import android.app.Activity
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,10 +31,6 @@ class LoginFragment : Fragment(), RefreshableUI {
 
     private var _binding : FragmentLoginBinding? = null
     private val binding get() = _binding!!
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

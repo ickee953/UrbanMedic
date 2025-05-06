@@ -8,8 +8,12 @@
 
 package ru.urbanmedic.testapp
 
-import android.content.Intent
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextUtils
+import android.text.TextWatcher
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -24,7 +28,6 @@ import ru.urbanmedic.testapp.databinding.FragmentUpdateUserBinding
 import ru.urbanmedic.testapp.db.UrbanMedicDB
 import ru.urbanmedic.testapp.db.UserDao
 import ru.urbanmedic.testapp.model.User
-import ru.urbanmedic.testapp.repository.UserLocalRepository
 import ru.urbanmedic.testapp.utils.DialogHelper.showDialog
 
 class UpdateUserFragment: Fragment() {
@@ -57,11 +60,76 @@ class UpdateUserFragment: Fragment() {
         return binding.root
     }
 
+    private fun fieldsChecked(): Boolean {
+        val email = binding.email.text.toString().trim()
+        val lastName = binding.lastName.text.toString().trim()
+
+        return !(TextUtils.isEmpty(email) || !isValidEmail(email)
+                || TextUtils.isEmpty(lastName) || !isValidText(lastName))
+    }
+
+    private fun isValidEmail(email: String): Boolean {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
+    private fun String.onlyLetters() = all { it.isLetter() }
+
+    private fun isValidText(lastName: String): Boolean {
+        return lastName.onlyLetters()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         (activity as MainActivity).setSupportActionBar(binding.toolbar)
-        (activity as MainActivity).supportActionBar?.title = resources.getString(R.string.edit)
+
+        binding.email.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                }
+
+                @SuppressLint("UseCompatLoadingForColorStateLists", "UseCompatLoadingForDrawables")
+                override fun afterTextChanged(s: Editable?) {
+                    val email = s.toString().trim()
+                    if (TextUtils.isEmpty(email) || !isValidEmail(email)) {
+                        //binding.email.error = "Please enter a valid email address"
+                        binding.email.background = resources.getDrawable(R.drawable.background_edit_text_selector_error)
+                        binding.email.setTextColor(resources.getColor(R.color.warning))
+                        binding.saveBtn.isEnabled = false
+                    } else {
+                        //binding.email.error = null
+                        binding.email.background = resources.getDrawable(R.drawable.background_edit_text_selector)
+                        binding.email.setTextColor(resources.getColor(R.color.text_primary))
+                        if( fieldsChecked() ) binding.saveBtn.isEnabled = true
+                    }
+                }
+        })
+
+        binding.lastName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+            @SuppressLint("UseCompatLoadingForColorStateLists", "UseCompatLoadingForDrawables")
+            override fun afterTextChanged(s: Editable?) {
+                val lastName = s.toString().trim()
+                if (TextUtils.isEmpty(lastName) || !isValidText(lastName)) {
+                    //binding.email.error = "Please enter a valid last name"
+                    binding.lastName.background = resources.getDrawable(R.drawable.background_edit_text_selector_error)
+                    binding.lastName.setTextColor(resources.getColor(R.color.warning))
+                    binding.saveBtn.isEnabled = false
+                } else {
+                    //binding.email.error = null
+                    binding.lastName.background = resources.getDrawable(R.drawable.background_edit_text_selector)
+                    binding.lastName.setTextColor(resources.getColor(R.color.text_primary))
+                    if( fieldsChecked() ) binding.saveBtn.isEnabled = true
+                }
+            }
+        })
 
         binding.saveBtn.setOnClickListener {
             val userDao: UserDao = UrbanMedicDB.getDatabase(requireActivity().application).userDao()
@@ -95,6 +163,10 @@ class UpdateUserFragment: Fragment() {
             if(requireArguments().containsKey(ARG_LAST_NAME)){
                 binding.lastName.setText(requireArguments().getString(ARG_LAST_NAME))
             }
+
+            (activity as MainActivity).supportActionBar?.title = resources.getString(R.string.edit)
+        } else {
+            (activity as MainActivity).supportActionBar?.title = resources.getString(R.string.new_contact)
         }
     }
 

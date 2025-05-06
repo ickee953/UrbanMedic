@@ -8,10 +8,10 @@
         <item name="colorOnPrimary">@color/brand</item>-->
         <item name="colorError">@color/warning</item>
         <item name="android:colorBackground">@color/white</item>
-        <item name="colorAccent">@color/brand</item>
+        <item name="colorAccent">@color/text_primary</item>
         <item name="android:buttonStyle">@style/BrandButtonTheme</item>
-        <item name="textInputStyle">@style/BrandTextInputLayoutTheme</item>
-        <item name="editTextStyle">@style/BrandEditTextTheme</item>
+        <item name="textInputStyle">@style/TextInputLayoutTheme</item>
+        <item name="android:editTextStyle">@style/EditTextTheme</item>
         <item name="android:navigationBarColor">@color/white</item>
         <item name="android:windowLightNavigationBar">true</item>
         <!--<item name="actionBarTheme">@style/CustomActionBarTheme</item>-->
@@ -65,9 +65,8 @@
         <item name="android:paddingRight">16dp</item>
     </style>
 
-    <style name="BrandTextInputLayoutTheme" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
+    <style name="BrandTextInputLayoutTheme" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
         <item name="boxStrokeColor">@color/gray</item>
-        <item name="boxStrokeErrorColor">@color/warning</item>
         <item name="boxStrokeWidth">1dp</item>
         <item name="boxStrokeWidthFocused">1dp</item>
         <item name="helperTextEnabled">false</item>
@@ -75,9 +74,9 @@
         <item name="expandedHintEnabled">false</item>
         <item name="boxBackgroundColor">@color/white</item>
         <item name="android:textColor">@color/text_primary</item>
-        <!--<item name="endIconTint">@color/white</item>
-        <item name="endIconMode">none</item>-->
         <item name="endIconCheckable">false</item>
+        <item name="endIconTint">@null</item>
+        <item name="endIconMode">none</item>
         <item name="errorIconTint">@null</item>
         <item name="errorIconDrawable">@null</item>
         <item name="errorTextColor">@color/warning</item>
@@ -86,6 +85,33 @@
     </style>
 
     <style name="BrandEditTextTheme" parent="Widget.AppCompat.EditText">
+        <item name="android:textCursorDrawable">@null</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">Roboto</item>
+        <!--<item name="android:textAppearance">?android:attr/textAppearanceMedium</item>-->
+    </style>
+
+    <style name="TextInputLayoutTheme" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="boxStrokeColor">@color/gray</item>
+        <!--<item name="boxStrokeErrorColor">@color/warning</item>-->
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">1dp</item>
+        <item name="helperTextEnabled">true</item>
+        <item name="hintTextColor">@color/dark_gray</item>
+        <item name="expandedHintEnabled">false</item>
+        <item name="errorEnabled">false</item>
+        <item name="boxBackgroundColor">@color/white</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="endIconCheckable">false</item>
+        <item name="endIconMode">none</item>
+        <item name="errorIconTint">@null</item>
+        <item name="errorIconDrawable">@null</item>
+        <item name="errorTextColor">@color/warning</item>
+        <item name="android:colorError">@color/text_primary</item>
+    </style>
+
+    <style name="EditTextTheme" parent="Widget.AppCompat.EditText">
         <item name="android:textCursorDrawable">@null</item>
         <item name="android:textColor">@color/text_primary</item>
         <item name="android:textSize">14sp</item>

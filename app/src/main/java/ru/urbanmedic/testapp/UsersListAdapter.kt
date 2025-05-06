@@ -60,13 +60,13 @@ class UsersListAdapter(
             val res = holder.viewLayout.context!!.resources
 
             if (position % 2 == 0) {
-                holder.layoutNum.setBackgroundColor(res.getColor(R.color.cell_background))
-                holder.layoutLastName.setBackgroundColor(res.getColor(R.color.cell_background))
-                holder.layoutEmail.setBackgroundColor(res.getColor(R.color.cell_background))
-            } else {
                 holder.layoutNum.setBackgroundColor(res.getColor(R.color.white))
                 holder.layoutLastName.setBackgroundColor(res.getColor(R.color.white))
                 holder.layoutEmail.setBackgroundColor(res.getColor(R.color.white))
+            } else {
+                holder.layoutNum.setBackgroundColor(res.getColor(R.color.cell_background))
+                holder.layoutLastName.setBackgroundColor(res.getColor(R.color.cell_background))
+                holder.layoutEmail.setBackgroundColor(res.getColor(R.color.cell_background))
             }
 
             val num = position + 1

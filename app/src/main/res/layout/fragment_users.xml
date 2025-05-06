@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  © Panov Vitaly 2025 - All Rights Reserved
+
+  Unauthorized copying of this file, via any medium is strictly prohibited
+  Proprietary and confidential
+  Written by Panov Vitaly 5 May 2025
+-->
 <androidx.coordinatorlayout.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -28,54 +35,49 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!--<com.google.android.material.appbar.CollapsingToolbarLayout
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                style="@style/CustomToolBarTheme"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_scrollFlags="scroll|enterAlwaysCollapsed|exitUntilCollapsed">-->
+                android:layout_height="wrap_content">
 
-                <com.google.android.material.appbar.MaterialToolbar
-                    android:id="@+id/toolbar"
-                    style="@style/CustomToolBarTheme"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent">
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                    <com.google.android.material.button.MaterialButtonToggleGroup
+                        android:id="@+id/toggleButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_margin="0dp"
+                        style="@style/CustomButtonToggleGroup">
 
-                        <com.google.android.material.button.MaterialButtonToggleGroup
-                            android:id="@+id/toggleButton"
+                        <Button
+                            android:id="@+id/ru"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="start"
-                            android:layout_margin="0dp"
-                            style="@style/CustomButtonToggleGroup">
-                            <Button
-                                android:id="@+id/ru"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/ru"
-                                style="@style/CustomToggleButtonStyle" />
-                            <Button
-                                android:id="@+id/en"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/en"
-                                style="@style/CustomToggleButtonStyle" />
-                        </com.google.android.material.button.MaterialButtonToggleGroup>
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/cityTextView"
-                            style="@style/TitleTextViewStyle"
+                            android:text="@string/ru"
+                            style="@style/CustomToggleButtonStyle" />
+                        <Button
+                            android:id="@+id/en"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:textColor="@color/text_primary"/>
+                            android:text="@string/en"
+                            style="@style/CustomToggleButtonStyle" />
+                    </com.google.android.material.button.MaterialButtonToggleGroup>
 
-                    </RelativeLayout>
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/cityTextView"
+                        style="@style/TitleTextViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:textColor="@color/text_primary"/>
 
-                </com.google.android.material.appbar.MaterialToolbar>
-            <!--</com.google.android.material.appbar.CollapsingToolbarLayout>-->
+                </RelativeLayout>
+
+            </com.google.android.material.appbar.MaterialToolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.cardview.widget.CardView

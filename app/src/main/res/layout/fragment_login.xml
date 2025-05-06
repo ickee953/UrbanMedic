@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  © Panov Vitaly 2025 - All Rights Reserved
+
+  Unauthorized copying of this file, via any medium is strictly prohibited
+  Proprietary and confidential
+  Written by Panov Vitaly 5 May 2025
+-->
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
     android:layout_width="wrap_content"
     android:layout_height="match_parent">
@@ -78,6 +84,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout"
+            app:theme="@style/BrandTextInputLayoutTheme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxWidth="@dimen/text_input_layout_width"
@@ -91,6 +98,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/seed"
+                app:theme="@style/BrandEditTextTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="0dp"

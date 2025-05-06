@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
- <LinearLayout
+<!--
+  © Panov Vitaly 2025 - All Rights Reserved
+
+  Unauthorized copying of this file, via any medium is strictly prohibited
+  Proprietary and confidential
+  Written by Panov Vitaly 5 May 2025
+-->
+<LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/viewLayout"

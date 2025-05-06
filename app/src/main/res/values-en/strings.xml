@@ -46,8 +46,8 @@
 
     <string name="sign_in">Sign in</string>
     <string name="seed">Enter seed</string>
-    <string name="last_name">Last name</string>
-    <string name="email">Email</string>
+    <string name="last_name">Last name*</string>
+    <string name="email">Email*</string>
     <string name="add_contact">Add contact</string>
     <string name="are_you_sure">Are you sure you want to sign out?</string>
     <string name="information_will_be_deleted">
@@ -74,4 +74,5 @@
     <string name="en">en</string>
     <string name="permission_required">Permission required</string>
     <string name="no_localtion_permission">No location access granted</string>
+    <string name="field_required">This field is required</string>
 </resources>

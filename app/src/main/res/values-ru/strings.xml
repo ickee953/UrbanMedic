@@ -46,8 +46,8 @@
 
     <string name="sign_in">Войти</string>
     <string name="seed">Укажите сид</string>
-    <string name="last_name">Фамилия</string>
-    <string name="email">Email</string>
+    <string name="last_name">Фамилия*</string>
+    <string name="email">Email*</string>
     <string name="add_contact">Добавить контакт</string>
     <string name="are_you_sure">Вы уверены, что хотите выйти?</string>
     <string name="information_will_be_deleted">
@@ -74,4 +74,5 @@
     <string name="en">en</string>
     <string name="permission_required">Требуются дополнительные разрешения</string>
     <string name="no_localtion_permission">Разрешения на доступ к гео локации не были одобрены</string>
+    <string name="field_required">This field is required</string>
 </resources>
