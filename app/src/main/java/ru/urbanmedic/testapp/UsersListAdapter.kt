@@ -12,6 +12,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageButton
@@ -26,6 +27,10 @@ class UsersListAdapter(
 ) : RecyclerView.Adapter<UsersListAdapter.UserViewHolder>(){
 
     inner class UserViewHolder(view: View) : RecyclerView.ViewHolder(view){
+        val layoutNum: FrameLayout          = view.findViewById(R.id.layout_num)
+        val layoutLastName: FrameLayout     = view.findViewById(R.id.layout_last_name)
+        val layoutEmail: FrameLayout        = view.findViewById(R.id.layout_email)
+
         var viewLayout: LinearLayout        = view.findViewById(R.id.viewLayout)
         var numTextView: TextView           = view.findViewById(R.id.numTextView)
         var emailTextView: TextView         = view.findViewById(R.id.emailTextView)
@@ -52,15 +57,18 @@ class UsersListAdapter(
 
         val user = users[position]
         user.let {
-            holder.viewLayout.apply {
-                val res = context!!.resources
+            val res = holder.viewLayout.context!!.resources
 
-                if (position % 2 == 0) {
-                    setBackgroundColor(res.getColor(R.color.light_gray))
-                } else {
-                    setBackgroundColor(res.getColor(R.color.white))
-                }
+            if (position % 2 == 0) {
+                holder.layoutNum.setBackgroundColor(res.getColor(R.color.cell_background))
+                holder.layoutLastName.setBackgroundColor(res.getColor(R.color.cell_background))
+                holder.layoutEmail.setBackgroundColor(res.getColor(R.color.cell_background))
+            } else {
+                holder.layoutNum.setBackgroundColor(res.getColor(R.color.white))
+                holder.layoutLastName.setBackgroundColor(res.getColor(R.color.white))
+                holder.layoutEmail.setBackgroundColor(res.getColor(R.color.white))
             }
+
             val num = position + 1
             holder.numTextView.text         = "$num"
             holder.emailTextView.text       = it.email

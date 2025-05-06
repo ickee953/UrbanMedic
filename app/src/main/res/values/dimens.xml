@@ -5,6 +5,8 @@
     <dimen name="margin_min_1">16dp</dimen>
     <dimen name="margin">24dp</dimen>
     <dimen name="margin_middle">48dp</dimen>
+    <dimen name="margin_cell_top_bottom">10dp</dimen>
+    <dimen name="margin_cell_left_right">12dp</dimen>
     <dimen name="text_input_layout_width">318dp</dimen>
     <dimen name="gradient_offset">20dp</dimen>
     <dimen name="gradient_angle">-45</dimen>

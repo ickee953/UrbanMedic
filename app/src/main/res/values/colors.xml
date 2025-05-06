@@ -13,4 +13,5 @@
     <color name="text_gray">#8E8E93</color>
     <color name="warning">#E61717</color>
     <color name="tab_bar_color">#F7F7FA</color>
+    <color name="cell_background">#F2F2F7</color>
 </resources>

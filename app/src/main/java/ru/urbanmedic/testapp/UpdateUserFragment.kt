@@ -8,6 +8,7 @@
 
 package ru.urbanmedic.testapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -23,6 +24,8 @@ import ru.urbanmedic.testapp.databinding.FragmentUpdateUserBinding
 import ru.urbanmedic.testapp.db.UrbanMedicDB
 import ru.urbanmedic.testapp.db.UserDao
 import ru.urbanmedic.testapp.model.User
+import ru.urbanmedic.testapp.repository.UserLocalRepository
+import ru.urbanmedic.testapp.utils.DialogHelper.showDialog
 
 class UpdateUserFragment: Fragment() {
 
@@ -51,14 +54,14 @@ class UpdateUserFragment: Fragment() {
     ): View {
         _binding = FragmentUpdateUserBinding.inflate(inflater, container, false)
 
-        (activity as MainActivity).setSupportActionBar(binding.toolbar)
-        (activity as MainActivity).supportActionBar?.title = resources.getString(R.string.edit)
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        (activity as MainActivity).setSupportActionBar(binding.toolbar)
+        (activity as MainActivity).supportActionBar?.title = resources.getString(R.string.edit)
 
         binding.saveBtn.setOnClickListener {
             val userDao: UserDao = UrbanMedicDB.getDatabase(requireActivity().application).userDao()
@@ -113,7 +116,15 @@ class UpdateUserFragment: Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_cancel -> {
-                findNavController().navigateUp()
+                showDialog(
+                    requireContext(),
+                    resources.getString(R.string.are_you_sure),
+                    resources.getString(R.string.information_will_not_be_saved),
+                    R.string.dialog_btn_yes,
+                    R.string.dialog_btn_no,
+                    {
+                        findNavController().navigateUp()
+                    },{})
 
                 true
             }
