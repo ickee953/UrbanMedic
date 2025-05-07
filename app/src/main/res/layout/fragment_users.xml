@@ -14,22 +14,31 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/pullToRefresh"
+        <LinearLayout
             android:layout_marginTop="?attr/actionBarSize"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".MainActivity">
+            android:orientation="vertical">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_items_view"
+            <include layout="@layout/table_header"/>
+
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/pullToRefresh"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layoutManager="LinearLayoutManager"
-                tools:context="com.online.myapplication.ItemDetailHostActivity"
-                tools:listitem="@layout/list_item_user" />
+                tools:context=".MainActivity">
 
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_items_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layoutManager="LinearLayoutManager"
+                    tools:context="com.online.myapplication.ItemDetailHostActivity"
+                    tools:listitem="@layout/list_item_user" />
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        </LinearLayout>
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  © Panov Vitaly 2025 - All Rights Reserved
+
+  Unauthorized copying of this file, via any medium is strictly prohibited
+  Proprietary and confidential
+  Written by Panov Vitaly 5 May 2025
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/viewLayout"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.15"
+        android:background="@drawable/cell_border">
+
+        <FrameLayout
+            android:id="@+id/layout_num"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/table_header_bg">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/numTextView"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:lines="1"
+                android:textColor="@color/text_primary"
+                android:layout_marginTop="@dimen/margin_cell_top_bottom"
+                android:layout_marginBottom="@dimen/margin_cell_top_bottom"
+                android:layout_marginLeft="@dimen/margin_cell_left_right"
+                android:layout_marginRight="@dimen/margin_cell_left_right"
+                android:textAlignment="center"
+                android:text="@string/num"/>
+
+        </FrameLayout>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.3"
+        android:background="@drawable/cell_border">
+
+        <FrameLayout
+            android:id="@+id/layout_last_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/table_header_bg">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/lastNameTextView"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:lines="1"
+                android:layout_marginTop="@dimen/margin_cell_top_bottom"
+                android:layout_marginBottom="@dimen/margin_cell_top_bottom"
+                android:layout_marginLeft="@dimen/margin_cell_left_right"
+                android:layout_marginRight="@dimen/margin_cell_left_right"
+                android:textColor="@color/text_primary"
+                android:text="@string/last_name_header"/>
+
+        </FrameLayout>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.55"
+        android:background="@drawable/cell_border">
+
+        <FrameLayout
+            android:id="@+id/layout_email"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/table_header_bg">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/emailTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:lines="1"
+                android:layout_marginTop="@dimen/margin_cell_top_bottom"
+                android:layout_marginBottom="@dimen/margin_cell_top_bottom"
+                android:layout_marginLeft="@dimen/margin_cell_left_right"
+                android:layout_marginRight="@dimen/margin_cell_left_right"
+                android:textColor="@color/text_primary"
+                android:text="@string/email_header"/>
+
+        </FrameLayout>
+
+    </FrameLayout>
+
+</LinearLayout>
