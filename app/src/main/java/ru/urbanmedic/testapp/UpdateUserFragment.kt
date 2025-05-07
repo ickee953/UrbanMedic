@@ -156,9 +156,11 @@ class UpdateUserFragment: Fragment() {
 
             (activity as MainActivity).supportActionBar?.title = resources.getString(R.string.edit)
             binding.saveBtn.text = resources.getString(R.string.edit)
+            binding.saveBtn.isEnabled = true
         } else {
             (activity as MainActivity).supportActionBar?.title = resources.getString(R.string.new_contact)
             binding.saveBtn.text = resources.getString(R.string.save)
+            binding.saveBtn.isEnabled = false
         }
     }
 
