@@ -46,7 +46,7 @@ object Utils {
     }
 
     fun isValidText(text: String): Boolean {
-        val regex = "^[A-Za-z-]*$".toRegex()
+        val regex = "^[A-Za-zА-Яа-я-]*$".toRegex()
         return regex.matches(text)
     }
 }
