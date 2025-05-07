@@ -10,6 +10,7 @@ package ru.urbanmedic.testapp.utils
 
 import android.app.Activity
 import android.content.Context
+import android.util.Patterns
 import androidx.core.content.edit
 import java.util.Locale
 
@@ -38,5 +39,14 @@ object Utils {
         Locale.setDefault(myLocale)
         refreshable.refreshUI()
         context.onConfigurationChanged(conf)
+    }
+
+    fun isValidEmail(email: String): Boolean {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
+    fun isValidText(text: String): Boolean {
+        val regex = "^[A-Za-z-]*$".toRegex()
+        return regex.matches(text)
     }
 }

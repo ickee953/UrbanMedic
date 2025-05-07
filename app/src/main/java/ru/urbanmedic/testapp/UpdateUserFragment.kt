@@ -29,6 +29,7 @@ import ru.urbanmedic.testapp.db.UrbanMedicDB
 import ru.urbanmedic.testapp.db.UserDao
 import ru.urbanmedic.testapp.model.User
 import ru.urbanmedic.testapp.utils.DialogHelper.showDialog
+import ru.urbanmedic.testapp.utils.Utils
 
 class UpdateUserFragment: Fragment() {
 
@@ -64,18 +65,8 @@ class UpdateUserFragment: Fragment() {
         val email = binding.email.text.toString().trim()
         val lastName = binding.lastName.text.toString().trim()
 
-        return !(TextUtils.isEmpty(email) || !isValidEmail(email)
-                || TextUtils.isEmpty(lastName) || !isValidText(lastName))
-    }
-
-    private fun isValidEmail(email: String): Boolean {
-        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
-    }
-
-    private fun String.onlyLetters() = all { it.isLetter() }
-
-    private fun isValidText(lastName: String): Boolean {
-        return lastName.onlyLetters()
+        return !(TextUtils.isEmpty(email) || !Utils.isValidEmail(email)
+                || TextUtils.isEmpty(lastName) || !Utils.isValidText(lastName))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -93,7 +84,7 @@ class UpdateUserFragment: Fragment() {
                 @SuppressLint("UseCompatLoadingForColorStateLists", "UseCompatLoadingForDrawables")
                 override fun afterTextChanged(s: Editable?) {
                     val email = s.toString().trim()
-                    if (TextUtils.isEmpty(email) || !isValidEmail(email)) {
+                    if (TextUtils.isEmpty(email) || !Utils.isValidEmail(email)) {
                         //binding.email.error = "Please enter a valid email address"
                         binding.email.background = resources.getDrawable(R.drawable.background_edit_text_selector_error)
                         binding.email.setTextColor(resources.getColor(R.color.warning))
@@ -117,7 +108,7 @@ class UpdateUserFragment: Fragment() {
             @SuppressLint("UseCompatLoadingForColorStateLists", "UseCompatLoadingForDrawables")
             override fun afterTextChanged(s: Editable?) {
                 val lastName = s.toString().trim()
-                if (TextUtils.isEmpty(lastName) || !isValidText(lastName)) {
+                if (TextUtils.isEmpty(lastName) || !Utils.isValidText(lastName)) {
                     //binding.email.error = "Please enter a valid last name"
                     binding.lastName.background = resources.getDrawable(R.drawable.background_edit_text_selector_error)
                     binding.lastName.setTextColor(resources.getColor(R.color.warning))

@@ -22,14 +22,14 @@ class UserNetworkRepository(
         errorCallback: (errorCode: Int?, errorMsg: String?) -> Unit
     ): Collection<User>? {
         val url = "${RetrofitBuilder.USER_BASE_URL}/${RetrofitBuilder.USER_API_PATH}" +
-                "?page=${page}&results=${RetrofitBuilder.USER_API_RESULTS}&seed=${seed}"
+                "?inc=name,email&page=${page}&results=${RetrofitBuilder.USER_API_RESULTS}&seed=${seed}"
 
         return load(url, errorCallback)
     }
 
     override suspend fun loadUsers( errorCallback: (errorCode: Int?, errorMsg: String?) -> Unit ): Collection<User>? {
 
-        val url = "${RetrofitBuilder.USER_BASE_URL}/${RetrofitBuilder.USER_API_PATH}?seed=${seed}"
+        val url = "${RetrofitBuilder.USER_BASE_URL}/${RetrofitBuilder.USER_API_PATH}?inc=name,email&seed=${seed}"
 
         return load(url, errorCallback)
     }
