@@ -13,7 +13,6 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
-import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -156,8 +155,10 @@ class UpdateUserFragment: Fragment() {
             }
 
             (activity as MainActivity).supportActionBar?.title = resources.getString(R.string.edit)
+            binding.saveBtn.text = resources.getString(R.string.edit)
         } else {
             (activity as MainActivity).supportActionBar?.title = resources.getString(R.string.new_contact)
+            binding.saveBtn.text = resources.getString(R.string.save)
         }
     }
 
