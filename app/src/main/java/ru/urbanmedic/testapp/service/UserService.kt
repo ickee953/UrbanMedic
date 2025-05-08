@@ -13,7 +13,7 @@ import ru.urbanmedic.testapp.repository.UserRepository
 
 class UserService(private val repository: UserRepository) {
     suspend fun loadUsers(
-        errCallback:(code: Int?, msg: String?)->Unit
+        errCallback:(code: Int?, msg: String?)->Unit = {_,_->}
     ): Collection<User>? = repository.loadUsers(errCallback)
 
     suspend fun loadPage(

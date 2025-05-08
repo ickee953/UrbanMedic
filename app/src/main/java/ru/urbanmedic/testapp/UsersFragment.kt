@@ -44,6 +44,7 @@ import ru.urbanmedic.testapp.model.User
 import ru.urbanmedic.testapp.repository.UserLocalRepository
 import ru.urbanmedic.testapp.repository.UserNetworkRepository
 import ru.urbanmedic.testapp.service.GeoService
+import ru.urbanmedic.testapp.service.UserService
 import ru.urbanmedic.testapp.utils.DialogHelper.showDialog
 import ru.urbanmedic.testapp.utils.Pageable
 import ru.urbanmedic.testapp.utils.RefreshableUI
@@ -306,23 +307,25 @@ class UsersFragment : Fragment(), RefreshableUI, Pageable {
     }
 
     private suspend fun loadUsersListLocal(){
-        val userRepository = UserLocalRepository(requireContext())
-        val localUsers = userRepository.loadUsers()
-        val result = ArrayList<UserItem>(localUsers.size)
-        localUsers.forEach { user ->
-            result.add(
-                UserItem(user.id, user.email, user.lastName, true)
-            )
-        }
-        synchronized(usersAdapter){
-            usersAdapter.prependDataset(result)
+        val userService = UserService(UserLocalRepository(requireContext()))
+        val localUsers = userService.loadUsers()
+        localUsers?.let {
+            val result = ArrayList<UserItem>(it.size)
+            localUsers.forEach { user ->
+                result.add(
+                    UserItem(user.id, user.email, user.lastName, true)
+                )
+            }
+            synchronized(usersAdapter){
+                usersAdapter.prependDataset(result)
+            }
         }
     }
 
     private suspend fun loadUsersListByNetwork(){
-        val userRepository = UserNetworkRepository(seed!!.value!!)
+        val userService = UserService(UserNetworkRepository(seed!!.value!!))
         binding.pullToRefresh.isRefreshing = true
-        val remoteUsers = userRepository.loadPage(currentPage){code, message ->
+        val remoteUsers = userService.loadPage(++currentPage) { code, message ->
             if( code == 502 ) {
                 showDialog(
                     requireContext(), "Bad Gateway",
@@ -364,7 +367,7 @@ class UsersFragment : Fragment(), RefreshableUI, Pageable {
     }
 
     override fun loadNextPage() {
-        currentPage++
+        //currentPage++
         lifecycleScope.launch {
             loadUsersListByNetwork()
         }
