@@ -19,7 +19,7 @@ import ru.urbanmedic.testapp.model.User
 @Dao
 interface UserDao {
 
-    @Query("SELECT * FROM user")
+    @Query("SELECT * FROM user ORDER BY id DESC")
     suspend fun all(): List<User>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
